@@ -95,13 +95,7 @@ void SudokuNode::getSolvedPuzzle(int puzzle[9][9])
 {
 	if (puzzleAssignedFlag)
 	{
-		for (int i = 0; i < 9; i++)
-		{
-			for (int j = 0; j < 9; j++)
-			{
-				puzzle[i][j] = puzzleSolved[i][j];
-			}
-		}
+		copyPuzzle(puzzleSolved, puzzle);
 	}
 	else
 		std::cout << "**Error: Program attempted to access puzzle that has not been assigned**" << std::endl;
@@ -111,13 +105,7 @@ void SudokuNode::getUnsolvedPuzzle(int puzzle[9][9])
 {
 	if (puzzleAssignedFlag)
 	{
-		for (int i = 0; i < 9; i++)
-		{
-			for (int j = 0; j < 9; j++)
-			{
-				puzzle[i][j] = puzzleUnsolved[i][j];
-			}
-		}
+		copyPuzzle(puzzleUnsolved, puzzle);
 	}
 	else
 		std::cout << "**Error: Program attempted to access puzzle that has not been assigned**" << std::endl;
