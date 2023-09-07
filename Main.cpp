@@ -1,11 +1,20 @@
 #include "SudokuList.h"
+#include "AlgorithmicSolver.h"
 
-//int main(void)
-//{
-	//do nothing... for now
-//}
+int main(void)
+{
+	//TODO: check for puzzle validity somewhere, if it's not already being done
+	SudokuNode sudoku;
+	sudoku.assignPuzzle("TestSudoku");
 
-//OLD MAIN, written in 2021
+	int puzzle[9][9];
+	sudoku.getUnsolvedPuzzle(puzzle);
+
+	AlgorithmicSolver solver(puzzle);
+	solver.solve();
+}
+
+/*
 int main(void)
 {
 	std::string select;
@@ -189,3 +198,4 @@ quit:
 	std::cout << "          Thanks for playing!" << std::endl;
 	return 0;
 }
+*/
