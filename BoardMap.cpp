@@ -2,6 +2,10 @@
 
 BoardMap::BoardMap(int puzzle[9][9])
 {
+	std::set<int> rows[9];
+	std::set<int> cols[9];
+	std::set<int> boxes[9];
+
 	for (int i = 0; i < 81; i++)
 	{
 		int row = i / 9;
@@ -15,45 +19,38 @@ BoardMap::BoardMap(int puzzle[9][9])
 			cols[col].insert(val);
 			boxes[box].insert(val);
 		}
+		else
+		{
+			unfilled.insert(i);
+		}
 	}
-}
 
-/*
-int spaceNum: an integer representing the space on the sudoku board
-to check. Can be from 0 to 80 inclusive, since there are 81 tiles on
-a sudoku board.
-
-returns:
-if the space indicated by spaceNum must be a particular integer, return
-that integer. If the space could be more than 1 integer then return -1.
-*/
-int BoardMap::mustBe(int spaceNum)
-{
-	int row = spaceNum / 9;
-	int col = spaceNum % 9;
-	int box = (spaceNum / 27) * 3 + (spaceNum % 9) / 3;
-
-	std::set<int> all = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-	std::set<int> cantBe;
-	
-	//I would love to use set_union and set_difference here
-	//but I get the error 'namespace "std" has no member "set_difference"'
-	//whenever I try to use it... Oh well, this should work too
-
-	cantBe.insert(rows[row].begin(), rows[row].end());
-	cantBe.insert(cols[col].begin(), cols[col].end());
-	cantBe.insert(boxes[box].begin(), boxes[box].end());
-	
-	std::set<int>::iterator it;
-	for (it = cantBe.begin(); it != cantBe.end(); it++)
+	std::set<int>::iterator it1;
+	for (it1 = unfilled.begin(); it1 != unfilled.end(); it1++)
 	{
-		all.erase(*it);
-	}	
-	
-	if (all.size() == 1)
-		return *all.begin();
+		int spaceNum = *it1;
+		int row = spaceNum / 9;
+		int col = spaceNum % 9;
+		int box = (spaceNum / 27) * 3 + (spaceNum % 9) / 3;
 
-	return -1;
+		std::set<int> all = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+		std::set<int>::iterator it2;
+		for (it2 = rows[row].begin(); it2 != rows[row].end(); it2++)
+		{
+			all.erase(*it2);
+		}
+		for (it2 = cols[col].begin(); it2 != cols[col].end(); it2++)
+		{
+			all.erase(*it2);
+		}
+		for (it2 = boxes[box].begin(); it2 != boxes[box].end(); it2++)
+		{
+			all.erase(*it2);
+		}
+
+		spaceCandidates[spaceNum] = all;
+	}
 }
 
 void BoardMap::insert(int spaceNum, int val)
@@ -62,7 +59,19 @@ void BoardMap::insert(int spaceNum, int val)
 	int col = spaceNum % 9;
 	int box = (spaceNum / 27) * 3 + (spaceNum % 9) / 3;
 
-	rows[row].insert(val);
-	cols[col].insert(val);
-	boxes[box].insert(val);
+	unfilled.erase(spaceNum);
+
+	std::set<int>::iterator it;
+	for (it = unfilled.begin(); it != unfilled.end(); it++)
+	{
+		int candidateSpaceNum = *it;
+		int candidateRow = candidateSpaceNum / 9;
+		int candidateCol = candidateSpaceNum % 9;
+		int candidateBox = (candidateSpaceNum / 27) * 3 + (candidateSpaceNum % 9) / 3;
+
+		if (candidateRow == row || candidateCol == col || candidateBox == box)
+		{
+			spaceCandidates[candidateSpaceNum].erase(val);
+		}
+	}
 }

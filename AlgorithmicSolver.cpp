@@ -9,11 +9,7 @@ AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9])
 		for (int j = 0; j < 9; j++)
 		{
 			int val = puzzle[i][j];
-
 			this->puzzle[i][j] = val;
-			
-			if (val == -1 || val == 0)
-				unfilled.insert(i * 9 + j);
 		}
 	}
 	
@@ -23,19 +19,19 @@ AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9])
 bool AlgorithmicSolver::soleCandidate(void)
 {
 	std::set<int>::iterator it;
-	int mustBe = 0;
-	for (it = unfilled.begin(); it != unfilled.end(); it++)
+	for (it = boardMap->unfilled.begin(); it != boardMap->unfilled.end(); it++)
 	{
+
 		int spaceNum = *it;
-		mustBe = boardMap->mustBe(spaceNum);
-		if (mustBe != -1)
+		std::set<int> candidates = boardMap->spaceCandidates[spaceNum];
+		if (candidates.size() == 1)
 		{
 			int row = spaceNum / 9;
 			int col = spaceNum % 9;
+			int val = *candidates.begin();
 
-			puzzle[row][col] = mustBe;
-			boardMap->insert(spaceNum, mustBe);
-			unfilled.erase(spaceNum);
+			puzzle[row][col] = val;
+			boardMap->insert(spaceNum, val);
 			return true;
 		}
 	}

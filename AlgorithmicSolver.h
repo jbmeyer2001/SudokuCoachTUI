@@ -8,7 +8,6 @@ class AlgorithmicSolver
 {
 private:
 	int puzzle[9][9] = { -1 };
-	std::set<int> unfilled;
 	BoardMap* boardMap;
 
 	bool soleCandidate(void);
