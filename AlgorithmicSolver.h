@@ -11,6 +11,8 @@ private:
 	BoardMap* boardMap;
 
 	bool soleCandidate(void);
+	bool uniqueCandidate(void);
+	std::set<int> uniqueCandidateHelper(int space, std::set<int> spaces);
 
 public:
 	AlgorithmicSolver(int puzzle[9][9]);

@@ -1,5 +1,6 @@
 #include "SudokuList.h"
 #include "AlgorithmicSolver.h"
+#include "Utility.h"
 
 int main(void)
 {

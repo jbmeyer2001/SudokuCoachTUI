@@ -1,4 +1,5 @@
 #include "BoardMap.h"
+#include "Utility.h"
 
 BoardMap::BoardMap(int puzzle[9][9])
 {
@@ -61,17 +62,14 @@ void BoardMap::insert(int spaceNum, int val)
 
 	unfilled.erase(spaceNum);
 
-	std::set<int>::iterator it;
-	for (it = unfilled.begin(); it != unfilled.end(); it++)
-	{
-		int candidateSpaceNum = *it;
-		int candidateRow = candidateSpaceNum / 9;
-		int candidateCol = candidateSpaceNum % 9;
-		int candidateBox = (candidateSpaceNum / 27) * 3 + (candidateSpaceNum % 9) / 3;
+	std::set<int> affectedSpaces = sameRowColBox(row, col, box);
 
-		if (candidateRow == row || candidateCol == col || candidateBox == box)
+	std::set<int>::iterator it;
+	for (it = affectedSpaces.begin(); it != affectedSpaces.end(); it++)
+	{
+		if (unfilled.find(*it) != unfilled.end())
 		{
-			spaceCandidates[candidateSpaceNum].erase(val);
+			spaceCandidates[*it].erase(val);
 		}
 	}
 }

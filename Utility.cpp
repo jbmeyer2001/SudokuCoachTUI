@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "Utility.h"
 
 /*
@@ -200,4 +201,25 @@ void copyPuzzle(int fullPuzzle[9][9], int emptyPuzzle[9][9])
 			emptyPuzzle[i][j] = fullPuzzle[i][j];
 		}
 	}
+}
+
+//returns the indexes of the row, column, and box specified.
+//for example:
+//if row is 1, returns a set containing: 9, 10, 11, 12, 13, 14, 15, 16, 17
+//if box is 2, returns a set containing: 6, 7, 8, 15, 16, 17, 24, 25, 26
+//-1 may be input for row, col, or box to not contain any specific row/col/box in
+//the final set. This can be used to get only values from a given box by leaving row and
+//col -1.
+std::set<int> sameRowColBox(int row, int col, int box)
+{
+	std::set<int> indexes;
+
+	for (int i = 0; i < 9; i++)
+	{
+		if (row != -1) { indexes.insert(i + row * 9); } //all indexes from given row
+		if (col != -1) { indexes.insert(i * 9 + col); } //all indexes from given column
+		if (box != -1) { indexes.insert((i / 3) * 9 + (i % 3) + (box / 3) * 27 + (box % 3) * 3); } //all indexes from given box
+	}
+
+	return indexes;
 }
