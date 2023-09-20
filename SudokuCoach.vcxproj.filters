@@ -33,6 +33,9 @@
     <ClCompile Include="AlgorithmicSolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BoardMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utility.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AlgorithmicSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BoardMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

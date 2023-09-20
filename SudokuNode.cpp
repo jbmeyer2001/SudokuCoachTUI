@@ -18,40 +18,33 @@ void SudokuNode::assignPuzzle(std::string name)
 	//Only allow object to be assigned if it has not been assigned previously.
 	if (!puzzleAssignedFlag)
 	{
-		puzzleName = name;
+		std::string directory = "sudokus/" + name + ".csv";
+		std::ifstream file;
+		file.open(directory);
 
-		//If file opens properly, assign the values from the text file to
-		//both puzzle_unsolved and puzzle_solved.
-		std::string directory = "sudokus/" + puzzleName + ".txt";
-		std::ifstream sudokuFile;
-		sudokuFile.open(directory);
+		std::string line;
+		int i = 0;
 
-		if (sudokuFile.is_open())
+		for (int i = 0; i < 9; i++) //TODO what if file doesn't have this many lines!!!
 		{
-			for (int i = 0; i < 9; i++)
+			std::getline(file, line);
+
+			for (int j = 0; j < 9; j++)
 			{
-				for (int j = 0; j < 9; j++)
-				{
-					sudokuFile >> number;
-					puzzleUnsolved[i][j] = number;
-					puzzleSolved[i][j] = number;
-				}
+				int val = line.at(j * 2) - '0';
+				puzzleUnsolved[i][j] = val;
+				puzzleSolved[i][j] = val;
 			}
-			sudokuFile.close();
-		}
-		else
-		{
-			//If file does not open properly, print an error and put up error flag.
-			std::cout << "**Error opening file**" << std::endl;
-			errFlag = true;
+
+			i++;
 		}
 
-		//If there were no errors reading from the file, puzzle_solved is solved by algorithm
-		if (!errFlag)
-		{
-			solveSudoku(puzzleSolved, 0, 0);
-			puzzleAssignedFlag = true;
-		}
+		file.close();
+
+		solveSudoku(puzzleSolved, 0, 0); //TODO add something for if there is an error in the puzzle
+		puzzleAssignedFlag = true;
+
+		//TODO error handling on this entire class, so much error handling
 	}
 }
 

@@ -6,7 +6,7 @@ int main(void)
 {
 	//TODO: check for puzzle validity somewhere, if it's not already being done
 	SudokuNode sudoku;
-	sudoku.assignPuzzle("TestSudoku");
+	sudoku.assignPuzzle("TestSudokuEasy");
 
 	int puzzle[9][9];
 	sudoku.getUnsolvedPuzzle(puzzle);
