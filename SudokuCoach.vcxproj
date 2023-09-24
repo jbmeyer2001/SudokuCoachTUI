@@ -131,16 +131,16 @@
     <ClCompile Include="BoardMap.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="RecursiveSolver.cpp" />
-    <ClCompile Include="SudokuList.cpp" />
-    <ClCompile Include="SudokuNode.cpp" />
+    <ClCompile Include="SudokuMap.cpp" />
+    <ClCompile Include="Sudoku.cpp" />
     <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlgorithmicSolver.h" />
     <ClInclude Include="BoardMap.h" />
     <ClInclude Include="RecursiveSolver.h" />
-    <ClInclude Include="SudokuList.h" />
-    <ClInclude Include="SudokuNode.h" />
+    <ClInclude Include="SudokuMap.h" />
+    <ClInclude Include="Sudoku.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

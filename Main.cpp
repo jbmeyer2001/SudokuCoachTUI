@@ -1,15 +1,17 @@
-#include "SudokuList.h"
+#include "SudokuMap.h"
 #include "AlgorithmicSolver.h"
 #include "Utility.h"
 
 int main(void)
 {
 	//TODO: check for puzzle validity somewhere, if it's not already being done
-	SudokuNode sudoku;
-	sudoku.assignPuzzle("TestSudokuEasy");
+	SudokuMap sudokus;
+
+	//SudokuNode sudoku;
+	//sudoku.assignPuzzle("TestSudokuEasy");
 
 	int puzzle[9][9];
-	sudoku.getUnsolvedPuzzle(puzzle);
+	//sudoku.getUnsolvedPuzzle(puzzle);
 
 	AlgorithmicSolver solver(puzzle);
 	solver.solve();
@@ -21,7 +23,7 @@ int main(void)
 	std::string select;
 	char select_char;
 	std::string name;
-	SudokuList list;
+	SudokuMap sudokus;
 
 	//------------------------------------------------------------------------------------------------------------//
 	//Start:
@@ -74,7 +76,7 @@ start_input:
 	//Runs the addSudoku method in the list object, then returns to start.
 	//-------------------------------------------------------------------//
 add_sudoku:
-	list.addSudoku();
+	sudokus.addSudoku();
 	goto start;
 
 
@@ -87,10 +89,10 @@ add_sudoku:
 	//--------------------------------------------------------------------------------------------------------------//
 solve_sudoku:
 	std::cout << "          Type the name of the sudoku you would like to solve from the following list:" << std::endl;
-	list.displayPuzzleNames();
+	sudokus.displayPuzzleNames();
 	std::cout << std::endl;
 	getline(std::cin, name, '\n');
-	list.displayUnsolved(name);
+	sudokus.displayUnsolved(name);
 	std::cout << "\n\n";
 	goto check_sudoku;
 
@@ -104,7 +106,7 @@ solve_sudoku:
 	//-------------------------------------------------------------------------------------------//
 view_solved_sudoku:
 	std::cout << "          Type the value of the sudoku you would like view solved from the following list:" << std::endl;
-	list.displayPuzzleNames();
+	sudokus.displayPuzzleNames();
 	std::cout << std::endl;
 	getline(std::cin, name, '\n');
 	goto display_solved_sudoku;
@@ -117,7 +119,7 @@ view_solved_sudoku:
 	//Runs checkSudoku method and asks user what to do next, and branches to that location.
 	//-----------------------------------------------------------------------------------//
 check_sudoku:
-	list.checkSudoku(name);
+	sudokus.checkSudoku(name);
 	std::cout << "          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 	std::cout << "          Return to the start:                                   (enter 1)" << std::endl;
 	std::cout << "          Quit the application:                                  (enter 2)" << std::endl;
@@ -158,7 +160,7 @@ check_sudoku_input:
 	//runs displaySolved method and asks user what to do next, branches to that location.
 	//---------------------------------------------------------------------------------//
 display_solved_sudoku:
-	list.displaySolved(name);
+	sudokus.displaySolved(name);
 	std::cout << "          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 	std::cout << "          Return to the start?                                   (enter 1)" << std::endl;
 	std::cout << "          Quit the application?                                  (enter 2)" << std::endl;
