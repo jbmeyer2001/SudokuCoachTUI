@@ -6,12 +6,13 @@ int main(void)
 {
 	//TODO: check for puzzle validity somewhere, if it's not already being done
 	SudokuMap sudokus;
-
-	//SudokuNode sudoku;
-	//sudoku.assignPuzzle("TestSudokuEasy");
+	Sudoku* sudoku = sudokus.findPuzzle("TestSudokuEasy");
+	
+	if (sudoku == NULL)
+		return;
 
 	int puzzle[9][9];
-	//sudoku.getUnsolvedPuzzle(puzzle);
+	sudoku->getUnsolvedPuzzle(puzzle);
 
 	AlgorithmicSolver solver(puzzle);
 	solver.solve();

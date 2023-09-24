@@ -61,6 +61,7 @@ void BoardMap::insert(int spaceNum, int val)
 	int box = (spaceNum / 27) * 3 + (spaceNum % 9) / 3;
 
 	unfilled.erase(spaceNum);
+	spaceCandidates[spaceNum].clear();
 
 	std::set<int> affectedSpaces = sameRowColBox(row, col, box);
 

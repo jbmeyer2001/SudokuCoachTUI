@@ -17,7 +17,7 @@ Sudoku::Sudoku(std::filesystem::path path)
 
 	std::string s_path = path.string();
 	std::ifstream file;
-	file.open(s_path);
+	file.open(s_path); //TODO check if file is actually open
 
 	std::string line;
 	int i = 0;

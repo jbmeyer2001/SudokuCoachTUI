@@ -9,8 +9,7 @@ class SudokuMap
 {
 private:
 	std::map<std::string, Sudoku> sudokus;
-	Sudoku* findPuzzle(std::string puzzleName);
-
+	
 public:
 	SudokuMap(void);
 	void addSudoku(void);
@@ -18,6 +17,7 @@ public:
 	void displayUnsolved(std::string puzzleName);
 	void displaySolved(std::string puzzleName);
 	void checkSudoku(std::string puzzleName);
+	Sudoku* findPuzzle(std::string puzzleName);
 	~SudokuMap(void);
 };
 

@@ -13,6 +13,8 @@ private:
 	bool soleCandidate(void);
 	bool uniqueCandidate(void);
 	std::set<int> uniqueCandidateHelper(int space, std::set<int> spaces);
+	bool blockColRowInteraction(void);
+	std::set<int> getCommonalities(int i1, int i2, int i3);
 
 public:
 	AlgorithmicSolver(int puzzle[9][9]);
