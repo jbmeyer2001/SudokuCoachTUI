@@ -15,7 +15,7 @@ private:
 	bool checkSpaceUniqueCandidate(int space, std::set<int> spaces);
 	bool blockColRowInteraction(void);
 	std::set<int> getCommonalities(int i1, int i2, int i3);
-	std::set<int> getCandidates(std::set<int> squares);
+	std::set<int> getCandidates(std::set<int> spaces);
 	bool removeCandidates(std::set<int> commonalities, int row, int col, int box);
 
 public:

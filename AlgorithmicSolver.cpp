@@ -120,10 +120,10 @@ bool AlgorithmicSolver::blockColRowInteraction(void)
 		std::set<int> rowThreeCommonalities = getCommonalities(startIndex + 18, startIndex + 19, startIndex + 20);
 
 		/*
-		get the squares in the box that aren't in the row with the call to getDifference(sameRowColBox(-1, -1, box), sameRowColBox(row, -1, -1)).
+		get the spaces in the box that aren't in the row with the call to getDifference(sameRowColBox(-1, -1, box), sameRowColBox(row, -1, -1)).
 		For example is we are looking at the middle row of the top left box, the set returned would be {0, 1, 2, 18, 19, 20}.
 
-		The call to getCandidates gets all the candidates from the squares in the set mentioned above.
+		The call to getCandidates gets all the candidates from the spaces in the set mentioned above.
 
 		finally, the call to get difference gets all the values that are in the commonality of that row, but not anywhere else in the box.
 
@@ -169,12 +169,12 @@ std::set<int> AlgorithmicSolver::getCommonalities(int i1, int i2, int i3)
 	return getUnion(common1, common2, common3);
 }
 
-std::set<int> AlgorithmicSolver::getCandidates(std::set<int> squares)
+std::set<int> AlgorithmicSolver::getCandidates(std::set<int> spaces)
 {
 	std::set<int> retval;
 	std::set<int>::iterator it;
 
-	for (it = squares.begin(); it != squares.end(); it++)
+	for (it = spaces.begin(); it != spaces.end(); it++)
 	{
 		int val = *it;
 		if (boardMap->unfilled.contains(val))
@@ -193,12 +193,12 @@ bool AlgorithmicSolver::removeCandidates(std::set<int> commonalities, int row, i
 	while (!commonalities.empty())
 	{
 		int val = *commonalities.begin();
-		std::set<int> affectedSquares = getDifference(sameRowColBox(row, col, -1), sameRowColBox(-1, -1, box));
+		std::set<int> affectedSpaces = getDifference(sameRowColBox(row, col, -1), sameRowColBox(-1, -1, box));
 
 		std::set<int>::iterator it;
-		for (it = affectedSquares.begin(); it != affectedSquares.end(); it++)
+		for (it = affectedSpaces.begin(); it != affectedSpaces.end(); it++)
 		{
-			//the square/space is unfilled, and one of the affected squares contains a value that needs to be removed
+			//the space is unfilled, and one of the affected spaces contains a value that needs to be removed
 			//because of the block to row/col interaction
 			if (boardMap->unfilled.contains(*it) && boardMap->spaceCandidates[*it].contains(val))
 			{

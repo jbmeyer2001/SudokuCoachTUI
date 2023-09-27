@@ -57,7 +57,7 @@ get_sudoku_name:
 		goto get_sudoku_name;
 	}
 
-	std::cout << "          NOTE: all lines of sudoku puzzle must be entered as 9 integer values seperated by spaces, '0' represents an empty square." << std::endl;
+	std::cout << "          NOTE: all lines of sudoku puzzle must be entered as 9 integer values seperated by spaces, '0' represents an empty space." << std::endl;
 	std::cout << "          Enter sudoku puzzle:" << std::endl;
 
 	for (int i = 0; i < 9; i++)
@@ -189,7 +189,7 @@ void SudokuMap::checkSudoku(std::string puzzleName)
 		return;
 	}
 
-	std::cout << "          NOTE: all lines of sudoku puzzle must be entered as 9 integer values seperated by spaces, '0' represents an empty square." << std::endl;
+	std::cout << "          NOTE: all lines of sudoku puzzle must be entered as 9 integer values seperated by spaces, '0' represents an empty space." << std::endl;
 	std::cout << "          Enter sudoku puzzle:" << std::endl;
 
 	int puzzle[9][9];

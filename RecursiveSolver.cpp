@@ -21,7 +21,7 @@ bool solveSudoku(int puzzle[9][9], int row_num, int column_num)
 	if (isSolved(puzzle))
 		return true;
 
-	//If the current call of the function lands on an already filled square, 
+	//If the current call of the function lands on an already filled space, 
 	//'skip' it by calling the next index without editing the sudoku array.
 	if (puzzle[row_num][column_num] != 0)
 		return solveSudoku(puzzle, next_row, next_column);
