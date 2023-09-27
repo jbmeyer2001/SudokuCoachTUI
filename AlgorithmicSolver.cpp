@@ -1,5 +1,3 @@
-#include <algorithm>
-
 #include "AlgorithmicSolver.h"
 #include "BoardMap.h"
 #include "Utility.h"
@@ -43,6 +41,8 @@ bool AlgorithmicSolver::soleCandidate(void)
 
 bool AlgorithmicSolver::uniqueCandidate(void)
 {
+	bool flag = false;
+
 	std::set<int>::iterator it;
 	for (it = boardMap->unfilled.begin(); it != boardMap->unfilled.end(); it++)
 	{
@@ -57,70 +57,59 @@ bool AlgorithmicSolver::uniqueCandidate(void)
 		std::set<int> boxSpaces = sameRowColBox(-1, -1, box);
 		boxSpaces.erase(space);
 
-		std::set<int> remainingCandidates;
-		remainingCandidates = uniqueCandidateHelper(space, rowSpaces);
-		if (remainingCandidates.size() == 1)
-		{
-			int val = *remainingCandidates.begin();
-			puzzle[row][col] = val;
-			boardMap->insert(space, val);
-			return true; //TODO: record this to keep track of steps taken
-		}
+		flag = flag || checkSpaceUniqueCandidate(space, rowSpaces);
+		flag = flag || checkSpaceUniqueCandidate(space, colSpaces);
+		flag = flag || checkSpaceUniqueCandidate(space, boxSpaces);
 
-		remainingCandidates = uniqueCandidateHelper(space, colSpaces);
-		if (remainingCandidates.size() == 1)
-		{
-			int val = *remainingCandidates.begin();
-			puzzle[row][col] = val;
-			boardMap->insert(space, val);
-			return true; //TODO: record this to keep track of steps taken
-		}
+		if (flag)
+			return true;
+	}
+	
+	return false;
+}
 
-		remainingCandidates = uniqueCandidateHelper(space, boxSpaces);
-		if (remainingCandidates.size() == 1)
+bool AlgorithmicSolver::checkSpaceUniqueCandidate(int space, std::set<int> spaces) //TODO: add enum so we know if it is a row, column, or box
+{
+	std::set<int> candidates = boardMap->spaceCandidates[space];
+
+	std::set<int>::iterator it;
+	for (it = spaces.begin(); it != spaces.end(); it++)
+	{
+		int val = *it;
+		if (boardMap->unfilled.contains(val))
 		{
-			int val = *remainingCandidates.begin();
-			puzzle[row][col] = val;
-			boardMap->insert(space, val);
-			return true; //TODO: record this to keep track of steps taken
-		}
+			std::set<int> removeCandidates = boardMap->spaceCandidates[val];
+			candidates = getDifference(candidates, removeCandidates);
+		}	
+	}
+
+	if (candidates.size() == 1)
+	{
+		int val = *candidates.begin();
+		puzzle[space / 9][space % 9] = val;
+		boardMap->insert(space, val);
+		return true; //TODO: record this to keep track of steps taken
 	}
 
 	return false;
 }
 
-std::set<int> AlgorithmicSolver::uniqueCandidateHelper(int space, std::set<int> spaces)
-{
-	std::set<int> candidates = boardMap->spaceCandidates[space];
-
-	std::set<int>::iterator it1;
-	for (it1 = spaces.begin(); it1 != spaces.end(); it1++)
-	{
-		if (boardMap->unfilled.find(*it1) != boardMap->unfilled.end())
-		{
-			std::set<int> removeCandidates = boardMap->spaceCandidates[*it1];
-			std::set<int>::iterator it2;
-			for (it2 = removeCandidates.begin(); it2 != removeCandidates.end(); it2++)
-			{
-				candidates.erase(*it2);
-			}
-		}	
-	}
-
-	return candidates;
-}
-
 bool AlgorithmicSolver::blockColRowInteraction(void)
 {
+	bool flag = false;
 	for (int box = 0; box < 9; box++) //for each block
 	{
 		int startIndex = (box / 3) * 27 + (box % 3) * 3;
-
+		int row = startIndex / 9;
+		int col = startIndex % 9;
 		/*
-		get commonalities of each row/column within the box
+		get commonalities of each row/column within the box.
 
-		a commonality is defines as a number that appears at least
-		twice in any given row or column within the box
+		a commonality is defined as a number that appears at least
+		twice in any given row or column within the box.
+
+		'commonality' is not a widespread term, but rather one 
+		I have come up with to give a useful concept a name.
 		*/
 		
 		std::set<int>::iterator it;
@@ -130,65 +119,39 @@ bool AlgorithmicSolver::blockColRowInteraction(void)
 		std::set<int> rowTwoCommonalities = getCommonalities(startIndex + 9, startIndex + 10, startIndex + 11);
 		std::set<int> rowThreeCommonalities = getCommonalities(startIndex + 18, startIndex + 19, startIndex + 20);
 
-		for (it = rowOneCommonalities.begin(); it != rowOneCommonalities.end(); it++)
-		{
-			if (!rowTwoCommonalities.contains(*it) && !rowThreeCommonalities.contains(*it))
-			{
-				//remove the candidate from all other indexes in the row (not counting the ones in this box)
-				//record that this happened
-			}
-		}
+		/*
+		get the squares in the box that aren't in the row with the call to getDifference(sameRowColBox(-1, -1, box), sameRowColBox(row, -1, -1)).
+		For example is we are looking at the middle row of the top left box, the set returned would be {0, 1, 2, 18, 19, 20}.
 
-		for (it = rowTwoCommonalities.begin(); it != rowTwoCommonalities.end(); it++)
-		{
-			if (!rowOneCommonalities.contains(*it) && !rowThreeCommonalities.contains(*it))
-			{
-				//remove the candidate from all other indexes in the row (not counting the ones in this box)
-				//record that this happened
-			}
-		}
+		The call to getCandidates gets all the candidates from the squares in the set mentioned above.
 
-		for (it = rowThreeCommonalities.begin(); it != rowThreeCommonalities.end(); it++)
-		{
-			if (!rowOneCommonalities.contains(*it) && !rowTwoCommonalities.contains(*it))
-			{
-				//remove the candidate from all other indexes in the row (not counting the ones in this box)
-				//record that this happened
-			}
-		}
+		finally, the call to get difference gets all the values that are in the commonality of that row, but not anywhere else in the box.
+
+		The reason the code does this is because in order for the values in the commonalities to be useful, they must not occur elsewhere in the box,
+		see 'Block and Column / Row Interaction' at https://www.kristanix.com/sudokuepic/sudoku-solving-techniques.php to see why
+		*/
+		std::set onlyRowOneComm = getDifference(rowOneCommonalities, getCandidates(getDifference(sameRowColBox(-1, -1, box), sameRowColBox(row, -1, -1))));
+		std::set onlyRowTwoComm = getDifference(rowTwoCommonalities, getCandidates(getDifference(sameRowColBox(-1, -1, box), sameRowColBox(row + 1, -1, -1))));
+		std::set onlyRowThreeComm = getDifference(rowThreeCommonalities, getCandidates(getDifference(sameRowColBox(-1, -1, box), sameRowColBox(row + 2, -1, -1))));
 
 		//next do the columns
 		std::set<int> colOneCommonalities = getCommonalities(startIndex, startIndex + 9, startIndex + 18);
 		std::set<int> colTwoCommonalities = getCommonalities(startIndex + 1, startIndex + 10, startIndex + 19);
 		std::set<int> colThreeCommonalities = getCommonalities(startIndex + 2, startIndex + 11, startIndex + 20);
 
-		for (it = colOneCommonalities.begin(); it != colOneCommonalities.end(); it++)
-		{
-			if (!colTwoCommonalities.contains(*it) && !colThreeCommonalities.contains(*it))
-			{
-				//remove the candidate from all other indexes in the row (not counting the ones in this box)
-				//record that this happened
-			}
-		}
+		//remove commonalities that aren't useful
+		std::set onlyColOneComm = getDifference(colOneCommonalities, getCandidates(getDifference(sameRowColBox(-1, -1, box), sameRowColBox(-1, col, -1))));
+		std::set onlyColTwoComm = getDifference(colTwoCommonalities, getCandidates(getDifference(sameRowColBox(-1, -1, box), sameRowColBox(-1, col + 1, -1))));
+		std::set onlyColThreeComm = getDifference(colThreeCommonalities, getCandidates(getDifference(sameRowColBox(-1, -1, box), sameRowColBox(-1, -col + 2, -1))));
 
-		for (it = colTwoCommonalities.begin(); it != colTwoCommonalities.end(); it++)
-		{
-			if (!colOneCommonalities.contains(*it) && !colThreeCommonalities.contains(*it))
-			{
-				//remove the candidate from all other indexes in the row (not counting the ones in this box)
-				//record that this happened
-			}
-		}
-
-		for (it = colThreeCommonalities.begin(); it != colThreeCommonalities.end(); it++)
-		{
-			if (!colOneCommonalities.contains(*it) && !colTwoCommonalities.contains(*it))
-			{
-				//remove the candidate from all other indexes in the row (not counting the ones in this box)
-				//record that this happened
-			}
-		}
+		flag = flag || removeCandidates(onlyRowOneComm, row, -1, box);
+		flag = flag || removeCandidates(onlyRowTwoComm, row + 1, -1, box);
+		flag = flag || removeCandidates(onlyRowThreeComm, row + 2, -1, box);
+		flag = flag || removeCandidates(onlyColOneComm, -1, col, box);
+		flag = flag || removeCandidates(onlyColTwoComm, -1, col + 1, box);
+		flag = flag || removeCandidates(onlyColThreeComm, -1, col + 2, box);
 	}
+	return flag;
 }
 
 std::set<int> AlgorithmicSolver::getCommonalities(int i1, int i2, int i3)
@@ -199,15 +162,55 @@ std::set<int> AlgorithmicSolver::getCommonalities(int i1, int i2, int i3)
 	std::set<int> si3 = boardMap->spaceCandidates[i3];
 	
 	//i1 & i2
-	std::set_intersection(si1.begin(), si1.end(), si2.begin(), si2.end(), commonalities.begin());
+	std::set<int> common1 = getIntersection(si1, si2);
+	std::set<int> common2 = getIntersection(si1, si3);
+	std::set<int> common3 = getIntersection(si2, si3);
+	
+	return getUnion(common1, common2, common3);
+}
 
-	//i1 & i3
-	std::set_intersection(si1.begin(), si1.end(), si3.begin(), si3.end(), commonalities.end()); //TODO: not sure if  this .end() business is going to work
+std::set<int> AlgorithmicSolver::getCandidates(std::set<int> squares)
+{
+	std::set<int> retval;
+	std::set<int>::iterator it;
 
-	//i2 & i3
-	std::set_intersection(si2.begin(), si2.end(), si3.begin(), si3.end(), commonalities.end());
+	for (it = squares.begin(); it != squares.end(); it++)
+	{
+		int val = *it;
+		if (boardMap->unfilled.contains(val))
+		{
+			retval.insert(boardMap->spaceCandidates[val].begin(), boardMap->spaceCandidates[val].end());
+		}
+	}
 
-	return commonalities;
+	return retval;
+}
+
+bool AlgorithmicSolver::removeCandidates(std::set<int> commonalities, int row, int col, int box)
+{
+	int rowOrCol = (row > col) ? row : col;
+	bool flag = false;
+	while (!commonalities.empty())
+	{
+		int val = *commonalities.begin();
+		std::set<int> affectedSquares = getDifference(sameRowColBox(row, col, -1), sameRowColBox(-1, -1, box));
+
+		std::set<int>::iterator it;
+		for (it = affectedSquares.begin(); it != affectedSquares.end(); it++)
+		{
+			//the square/space is unfilled, and one of the affected squares contains a value that needs to be removed
+			//because of the block to row/col interaction
+			if (boardMap->unfilled.contains(*it) && boardMap->spaceCandidates[*it].contains(val))
+			{
+				boardMap->spaceCandidates[*it].erase(val);
+				//TODO: record this to keep track of steps taken
+				flag = true;
+			}
+		}
+
+		commonalities.erase(val);
+	}
+	return flag;
 }
 
 void AlgorithmicSolver::solve(void)
@@ -218,7 +221,7 @@ void AlgorithmicSolver::solve(void)
 		//
 		if (soleCandidate()) { continue; }
 		if (uniqueCandidate()) { continue; }
-		
+		if (blockColRowInteraction()) { continue; }
 		i++;
 	}
 

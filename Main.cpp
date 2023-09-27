@@ -9,7 +9,7 @@ int main(void)
 	Sudoku* sudoku = sudokus.findPuzzle("TestSudokuEasy");
 	
 	if (sudoku == NULL)
-		return;
+		return 0;
 
 	int puzzle[9][9];
 	sudoku->getUnsolvedPuzzle(puzzle);

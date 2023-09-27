@@ -15,9 +15,9 @@ Sudoku::Sudoku(std::filesystem::path path)
 	int number = -1;
 	bool errFlag = false;
 
-	std::string s_path = path.string();
+	std::string path_string = path.string();
 	std::ifstream file;
-	file.open(s_path); //TODO check if file is actually open
+	file.open(path_string); //TODO check if file is actually open
 
 	std::string line;
 	int i = 0;
@@ -28,12 +28,10 @@ Sudoku::Sudoku(std::filesystem::path path)
 
 		for (int j = 0; j < 9; j++)
 		{
-			int val = line.at(j * 2) - '0';
+   			int val = line.at(j * 2) - '0';
 			puzzleUnsolved[i][j] = val;
 			puzzleSolved[i][j] = val;
 		}
-
-		i++;
 	}
 
 	file.close();

@@ -1,4 +1,6 @@
 #include <iostream>
+#include <algorithm>
+#include <iterator>
 
 #include "Utility.h"
 
@@ -222,4 +224,33 @@ std::set<int> sameRowColBox(int row, int col, int box)
 	}
 
 	return indexes;
+}
+
+std::set<int> getIntersection(std::set<int> set1, std::set<int> set2)
+{
+	std::set<int> retval;
+	std::set_intersection(set1.begin(), set1.end(), set2.begin(), set2.end(), std::inserter(retval, retval.end()));
+	return retval;
+}
+
+std::set<int> getUnion(std::set<int> set1, std::set<int> set2)
+{
+	std::set<int> retval;
+	std::set_union(set1.begin(), set1.end(), set2.begin(), set2.end(), std::inserter(retval, retval.end()));
+	return retval;
+}
+
+std::set<int> getUnion(std::set<int> set1, std::set<int> set2, std::set<int> set3)
+{
+	std::set<int> retval, partUnion;
+	std::set_union(set1.begin(), set1.end(), set2.begin(), set2.end(), std::inserter(partUnion, partUnion.end()));
+	std::set_union(partUnion.begin(), partUnion.end(), set3.begin(), set3.end(), std::inserter(retval, retval.end()));
+	return retval;
+}
+
+std::set<int> getDifference(std::set<int> set1, std::set<int> set2)
+{
+	std::set<int> retval;
+	std::set_difference(set1.begin(), set1.end(), set2.begin(), set2.end(), std::inserter(retval, retval.end()));
+	return retval;
 }
