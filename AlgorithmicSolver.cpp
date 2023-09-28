@@ -1,8 +1,6 @@
 #include <unordered_map>
 
 #include "AlgorithmicSolver.h"
-#include "BoardMap.h"
-#include "Utility.h"
 
 AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9])
 {
@@ -52,11 +50,11 @@ bool AlgorithmicSolver::uniqueCandidate(void)
 		int row = space / 9;
 		int col = space % 9;
 		int box = (space / 27) * 3 + (space % 9) / 3;
-		std::set<int> rowSpaces = sameRowColBox(row, -1, -1);
+		std::set<int> rowSpaces = getRow(row);
 		rowSpaces.erase(space);
-		std::set<int> colSpaces = sameRowColBox(-1, col, -1);
+		std::set<int> colSpaces = getCol(col);
 		colSpaces.erase(space);
-		std::set<int> boxSpaces = sameRowColBox(-1, -1, box);
+		std::set<int> boxSpaces = getBox(box);
 		boxSpaces.erase(space);
 
 		flag = flag || checkSpaceUniqueCandidate(space, rowSpaces);
@@ -122,7 +120,7 @@ bool AlgorithmicSolver::blockColRowInteraction(void)
 		std::set<int> rowThreeCommonalities = getCommonalities(startIndex + 18, startIndex + 19, startIndex + 20);
 
 		/*
-		get the spaces in the box that aren't in the row with the call to getDifference(sameRowColBox(-1, -1, box), sameRowColBox(row, -1, -1)).
+		get the spaces in the box that aren't in the row with the call to getDifference(getBox(box), getRow(row)).
 		For example is we are looking at the middle row of the top left box, the set returned would be {0, 1, 2, 18, 19, 20}.
 
 		The call to getCandidates gets all the candidates from the spaces in the set mentioned above.
@@ -132,9 +130,9 @@ bool AlgorithmicSolver::blockColRowInteraction(void)
 		The reason the code does this is because in order for the values in the commonalities to be useful, they must not occur elsewhere in the box,
 		see 'Block and Column / Row Interaction' at https://www.kristanix.com/sudokuepic/sudoku-solving-techniques.php to see why
 		*/
-		std::set onlyRowOneComm = getDifference(rowOneCommonalities, getCandidates(getDifference(sameRowColBox(-1, -1, box), sameRowColBox(row, -1, -1))));
-		std::set onlyRowTwoComm = getDifference(rowTwoCommonalities, getCandidates(getDifference(sameRowColBox(-1, -1, box), sameRowColBox(row + 1, -1, -1))));
-		std::set onlyRowThreeComm = getDifference(rowThreeCommonalities, getCandidates(getDifference(sameRowColBox(-1, -1, box), sameRowColBox(row + 2, -1, -1))));
+		std::set onlyRowOneComm = getDifference(rowOneCommonalities, getCandidates(getDifference(getBox(box), getRow(row))));
+		std::set onlyRowTwoComm = getDifference(rowTwoCommonalities, getCandidates(getDifference(getBox(box), getRow(row + 1))));
+		std::set onlyRowThreeComm = getDifference(rowThreeCommonalities, getCandidates(getDifference(getBox(box), getRow(row + 2))));
 
 		//next do the columns
 		std::set<int> colOneCommonalities = getCommonalities(startIndex, startIndex + 9, startIndex + 18);
@@ -142,16 +140,29 @@ bool AlgorithmicSolver::blockColRowInteraction(void)
 		std::set<int> colThreeCommonalities = getCommonalities(startIndex + 2, startIndex + 11, startIndex + 20);
 
 		//remove commonalities that aren't useful
-		std::set onlyColOneComm = getDifference(colOneCommonalities, getCandidates(getDifference(sameRowColBox(-1, -1, box), sameRowColBox(-1, col, -1))));
-		std::set onlyColTwoComm = getDifference(colTwoCommonalities, getCandidates(getDifference(sameRowColBox(-1, -1, box), sameRowColBox(-1, col + 1, -1))));
-		std::set onlyColThreeComm = getDifference(colThreeCommonalities, getCandidates(getDifference(sameRowColBox(-1, -1, box), sameRowColBox(-1, -col + 2, -1))));
+		std::set onlyColOneComm = getDifference(colOneCommonalities, getCandidates(getDifference(getBox(box), getBox(col))));
+		std::set onlyColTwoComm = getDifference(colTwoCommonalities, getCandidates(getDifference(getBox(box), getBox(col + 1))));
+		std::set onlyColThreeComm = getDifference(colThreeCommonalities, getCandidates(getDifference(getBox(box), getBox(col + 2))));
 
-		flag = flag || removeCandidates(onlyRowOneComm, row, -1, box);
-		flag = flag || removeCandidates(onlyRowTwoComm, row + 1, -1, box);
-		flag = flag || removeCandidates(onlyRowThreeComm, row + 2, -1, box);
-		flag = flag || removeCandidates(onlyColOneComm, -1, col, box);
-		flag = flag || removeCandidates(onlyColTwoComm, -1, col + 1, box);
-		flag = flag || removeCandidates(onlyColThreeComm, -1, col + 2, box);
+		//remove candidates from affected spaces
+		std::set<int> affectedSpaces;
+		affectedSpaces = getDifference(getRow(row), getBox(box));
+		flag = flag || removeCandidates(onlyRowOneComm, affectedSpaces, Interaction::BLOCKROWCOL);
+
+		affectedSpaces = getDifference(getRow(row + 1), getBox(box));
+		flag = flag || removeCandidates(onlyRowTwoComm, affectedSpaces, Interaction::BLOCKROWCOL);
+
+		affectedSpaces = getDifference(getRow(row + 2), getBox(box));
+		flag = flag || removeCandidates(onlyRowThreeComm, affectedSpaces, Interaction::BLOCKROWCOL);
+
+		affectedSpaces = getDifference(getCol(col), getBox(box));
+		flag = flag || removeCandidates(onlyColOneComm, affectedSpaces, Interaction::BLOCKROWCOL);
+
+		affectedSpaces = getDifference(getCol(col + 1), getBox(box));
+		flag = flag || removeCandidates(onlyColTwoComm, affectedSpaces, Interaction::BLOCKROWCOL);
+
+		affectedSpaces = getDifference(getCol(col + 2), getBox(box));
+		flag = flag || removeCandidates(onlyColThreeComm, affectedSpaces, Interaction::BLOCKROWCOL);
 	}
 	return flag;
 }
@@ -188,35 +199,10 @@ std::set<int> AlgorithmicSolver::getCandidates(std::set<int> spaces)
 	return retval;
 }
 
-bool AlgorithmicSolver::removeCandidates(std::set<int> commonalities, int row, int col, int box)
-{
-	int rowOrCol = (row > col) ? row : col;
-	bool flag = false;
-	while (!commonalities.empty())
-	{
-		int val = *commonalities.begin();
-		std::set<int> affectedSpaces = getDifference(sameRowColBox(row, col, -1), sameRowColBox(-1, -1, box));
-
-		std::set<int>::iterator it;
-		for (it = affectedSpaces.begin(); it != affectedSpaces.end(); it++)
-		{
-			//the space is unfilled, and one of the affected spaces contains a value that needs to be removed
-			//because of the block to row/col interaction
-			if (boardMap->unfilled.contains(*it) && boardMap->spaceCandidates[*it].contains(val))
-			{
-				boardMap->spaceCandidates[*it].erase(val);
-				//TODO: record this to keep track of steps taken
-				flag = true;
-			}
-		}
-
-		commonalities.erase(val);
-	}
-	return flag;
-}
-
 bool AlgorithmicSolver::blockBlockInteraction(void)
 {
+	bool flag = false;
+
 	typedef struct {
 		std::set<int> rowOneAndTwoComm;
 		std::set<int> rowOneAndThreeComm;
@@ -243,24 +229,28 @@ bool AlgorithmicSolver::blockBlockInteraction(void)
 		std::set<int> rowThreeCommonalities = getCommonalities(startIndex + 18, startIndex + 19, startIndex + 20);
 
 		//TODO: explain what code does here
-		b.rowOneAndTwoComm = getDifference(getIntersection(rowOneCommonalities, rowTwoCommonalities), getCandidates(sameRowColBox(row + 2, -1, -1)));
-		b.rowOneAndThreeComm = getDifference(getIntersection(rowOneCommonalities, rowThreeCommonalities), getCandidates(sameRowColBox(row + 1, -1, -1)));
-		b.rowTwoAndThreeComm = getDifference(getIntersection(rowTwoCommonalities, rowTwoCommonalities), getCandidates(sameRowColBox(row, -1, -1)));
+		b.rowOneAndTwoComm = getDifference(getIntersection(rowOneCommonalities, rowTwoCommonalities), getCandidates(getRow(row + 2)));
+		b.rowOneAndThreeComm = getDifference(getIntersection(rowOneCommonalities, rowThreeCommonalities), getCandidates(getRow(row + 1)));
+		b.rowTwoAndThreeComm = getDifference(getIntersection(rowTwoCommonalities, rowTwoCommonalities), getCandidates(getRow(row)));
 
 		//next on to the columns
 		std::set<int> colOneCommonalities = getCommonalities(startIndex, startIndex + 9, startIndex + 18);
 		std::set<int> colTwoCommonalities = getCommonalities(startIndex + 1, startIndex + 10, startIndex + 19);
 		std::set<int> colThreeCommonalities = getCommonalities(startIndex + 2, startIndex + 11, startIndex + 20);
 
-		b.colOneAndTwoComm = getDifference(getIntersection(colOneCommonalities, colTwoCommonalities), getCandidates(sameRowColBox(col + 2, -1, -1)));
-		b.colOneAndThreeComm = getDifference(getIntersection(colOneCommonalities, colThreeCommonalities), getCandidates(sameRowColBox(col + 1, -1, -1)));
-		b.colTwoAndThreeComm = getDifference(getIntersection(colTwoCommonalities, colTwoCommonalities), getCandidates(sameRowColBox(col, -1, -1)));
+		b.colOneAndTwoComm = getDifference(getIntersection(colOneCommonalities, colTwoCommonalities), getCandidates(getCol(col + 2)));
+		b.colOneAndThreeComm = getDifference(getIntersection(colOneCommonalities, colThreeCommonalities), getCandidates(getCol(col + 1)));
+		b.colTwoAndThreeComm = getDifference(getIntersection(colTwoCommonalities, colTwoCommonalities), getCandidates(getCol(col)));
 
 		blocks[box] = b;
 	}
 
 	for (int box = 0; box < 9; box++)
 	{
+		int startIndex = (box / 3) * 27 + (box % 3) * 3;
+		int row = startIndex / 9;
+		int col = startIndex % 9;
+
 		block rowBox1 = blocks[(box - (box % 3)) + ((box + 1) % 3)];
 		block rowBox2 = blocks[(box - (box % 3)) + ((box + 2) % 3)];
 		block colBox1 = blocks[(box + 3) % 9];
@@ -273,8 +263,166 @@ bool AlgorithmicSolver::blockBlockInteraction(void)
 		std::set<int> colOneAndThreeRemove = getIntersection(colBox1.colOneAndThreeComm, colBox2.colOneAndThreeComm);
 		std::set<int> colTwoAndThreeRemove = getIntersection(colBox1.colTwoAndThreeComm, colBox2.colTwoAndThreeComm);
 
+		std::set<int> affectedSpaces;
+		affectedSpaces = getDifference(getBox(box), getRow(row + 2));
+		flag = flag || removeCandidates(rowOneAndTwoRemove, affectedSpaces, Interaction::BLOCKBLOCK);
 
+		affectedSpaces = getDifference(getBox(box), getRow(row + 1));
+		flag = flag || removeCandidates(rowOneAndThreeRemove, affectedSpaces, Interaction::BLOCKBLOCK);
+
+		affectedSpaces = getDifference(getBox(box), getRow(row));
+		flag = flag || removeCandidates(rowTwoAndThreeRemove, affectedSpaces, Interaction::BLOCKBLOCK);
+
+		affectedSpaces = getDifference(getBox(box), getCol(col + 2));
+		flag = flag || removeCandidates(colOneAndTwoRemove, affectedSpaces, Interaction::BLOCKBLOCK);
+
+		affectedSpaces = getDifference(getBox(box), getCol(col + 1));
+		flag = flag || removeCandidates(colOneAndThreeRemove, affectedSpaces, Interaction::BLOCKBLOCK);
+
+		affectedSpaces = getDifference(getBox(box), getCol(col));
+		flag = flag || removeCandidates(colTwoAndThreeRemove, affectedSpaces, Interaction::BLOCKBLOCK);
 	}
+
+	return flag;
+}
+
+std::set<int> AlgorithmicSolver::getUnfilledSpaces(std::set<int> spaces)
+{
+	std::set<int> retval;
+
+	std::set<int>::iterator it;
+	for (it = spaces.begin(); it != spaces.end(); it++)
+	{
+		int space = *it;
+
+		if (boardMap->unfilled.contains(space))
+		{
+			retval.emplace(space);
+		}
+	}
+
+	return retval;
+}
+
+bool AlgorithmicSolver::checkSubsets(void)
+{
+	//check rows for naked subset
+	for (int i = 0; i < 9; i++)
+	{
+		if (nakedSubset(getRow(i), Set::ROW))
+		{
+			return true;
+		}
+	}
+
+	//check columns for naked subset
+	for (int i = 0; i < 9; i++)
+	{
+		if (nakedSubset(getCol(i), Set::COL))
+		{
+			return true;
+		}
+	}
+
+	//check boxes for naked subset
+	for (int i = 0; i < 9; i++)
+	{
+		if (nakedSubset(getBox(i), Set::BOX))
+		{
+			return true;
+		}
+	}
+
+	//check rows for hidden subset
+	for (int i = 0; i < 9; i++)
+	{
+		if (hiddenSubset(getRow(i), Set::ROW))
+		{
+			return true;
+		}
+	}
+
+	//check columns for hidden subset
+	for (int i = 0; i < 9; i++)
+	{
+		if (hiddenSubset(getCol(i), Set::COL))
+		{
+			return true;
+		}
+	}
+
+	//check boxes for hidden subset
+	for (int i = 0; i < 9; i++)
+	{
+		if (hiddenSubset(getBox(i), Set::BOX))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool AlgorithmicSolver::nakedSubset(std::set<int> spaces, Set s)
+{
+	std::set<int> unfilledSpaces = getUnfilledSpaces(spaces);
+	std::set<int>::iterator it1;
+
+	for (it1 = unfilledSpaces.begin(); it1 != unfilledSpaces.end(); it1++)
+	{
+		std::set<int> candidates1 = boardMap->spaceCandidates[*it1];
+		std::set<int> equivSpaces;
+		equivSpaces.insert(*it1);
+	
+		std::set<int>::reverse_iterator it2;
+		for (it2 = unfilledSpaces.rend(); it2 != std::make_reverse_iterator(it1); it2++)
+		{
+			std::set<int> candidates2 = boardMap->spaceCandidates[*it2];
+			
+			if (candidates1 == candidates2)
+			{
+				equivSpaces.emplace(*it2);
+			}
+		}
+
+		if (equivSpaces.size() == candidates1.size())
+		{
+			if (removeCandidates(candidates1, getDifference(unfilledSpaces, equivSpaces), Interaction::NAKEDSUBSET))
+			{
+				return true;
+			}
+		}
+	}
+}
+
+bool AlgorithmicSolver::hiddenSubset(std::set<int> spaces, Set s)
+{
+
+}
+
+bool AlgorithmicSolver::removeCandidates(std::set<int> candidates, std::set<int> affectedSpaces, Interaction interaction)
+{
+	bool flag = false;
+	while (!candidates.empty())
+	{
+		int val = *candidates.begin();
+
+		std::set<int>::iterator it;
+		for (it = affectedSpaces.begin(); it != affectedSpaces.end(); it++)
+		{
+			//the space is unfilled, and one of the affected spaces contains a value that needs to be removed
+			//because of the block to row/col interaction
+			if (boardMap->unfilled.contains(*it) && boardMap->spaceCandidates[*it].contains(val))
+			{
+				boardMap->spaceCandidates[*it].erase(val);
+				//TODO: record this to keep track of steps taken
+				flag = true;
+			}
+		}
+
+		candidates.erase(val);
+	}
+	return flag;
 }
 
 void AlgorithmicSolver::solve(void)

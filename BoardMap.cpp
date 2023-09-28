@@ -63,7 +63,7 @@ void BoardMap::insert(int spaceNum, int val)
 	unfilled.erase(spaceNum);
 	spaceCandidates[spaceNum].clear();
 
-	std::set<int> affectedSpaces = sameRowColBox(row, col, box);
+	std::set<int> affectedSpaces = getUnion(getRow(row), getCol(col), getBox(box));
 
 	std::set<int>::iterator it;
 	for (it = affectedSpaces.begin(); it != affectedSpaces.end(); it++)

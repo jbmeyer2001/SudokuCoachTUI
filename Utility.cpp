@@ -205,22 +205,40 @@ void copyPuzzle(int fullPuzzle[9][9], int emptyPuzzle[9][9])
 	}
 }
 
-//returns the indexes of the row, column, and box specified.
-//for example:
-//if row is 1, returns a set containing: 9, 10, 11, 12, 13, 14, 15, 16, 17
-//if box is 2, returns a set containing: 6, 7, 8, 15, 16, 17, 24, 25, 26
-//-1 may be input for row, col, or box to not contain any specific row/col/box in
-//the final set. This can be used to get only values from a given box by leaving row and
-//col -1.
-std::set<int> sameRowColBox(int row, int col, int box)
+//get all indexes in row row
+std::set<int> getRow(int row)
 {
 	std::set<int> indexes;
 
 	for (int i = 0; i < 9; i++)
 	{
-		if (row != -1) { indexes.insert(i + row * 9); } //all indexes from given row
-		if (col != -1) { indexes.insert(i * 9 + col); } //all indexes from given column
-		if (box != -1) { indexes.insert((i / 3) * 9 + (i % 3) + (box / 3) * 27 + (box % 3) * 3); } //all indexes from given box
+		indexes.insert(i + row * 9);
+	}
+
+	return indexes;
+}
+
+//get all indexes in column col
+std::set<int> getCol(int col)
+{
+	std::set<int> indexes;
+
+	for (int i = 0; i < 9; i++)
+	{
+		indexes.insert(i * 9 + col);
+	}
+
+	return indexes;
+}
+
+//get all indexes in box box
+std::set<int> getBox(int box)
+{
+	std::set<int> indexes;
+
+	for (int i = 0; i < 9; i++)
+	{
+		indexes.insert((i / 3) * 9 + (i % 3) + (box / 3) * 27 + (box % 3) * 3);
 	}
 
 	return indexes;
@@ -230,6 +248,14 @@ std::set<int> getIntersection(std::set<int> set1, std::set<int> set2)
 {
 	std::set<int> retval;
 	std::set_intersection(set1.begin(), set1.end(), set2.begin(), set2.end(), std::inserter(retval, retval.end()));
+	return retval;
+}
+
+std::set<int> getIntersection(std::set<int> set1, std::set<int> set2, std::set<int> set3)
+{
+	std::set<int> retval, partUnion;
+	std::set_intersection(set1.begin(), set1.end(), set2.begin(), set2.end(), std::inserter(partUnion, partUnion.end()));
+	std::set_intersection(partUnion.begin(), partUnion.end(), set3.begin(), set3.end(), std::inserter(retval, retval.end()));
 	return retval;
 }
 
