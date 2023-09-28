@@ -1,3 +1,5 @@
+#include <unordered_map>
+
 #include "AlgorithmicSolver.h"
 #include "BoardMap.h"
 #include "Utility.h"
@@ -211,6 +213,68 @@ bool AlgorithmicSolver::removeCandidates(std::set<int> commonalities, int row, i
 		commonalities.erase(val);
 	}
 	return flag;
+}
+
+bool AlgorithmicSolver::blockBlockInteraction(void)
+{
+	typedef struct {
+		std::set<int> rowOneAndTwoComm;
+		std::set<int> rowOneAndThreeComm;
+		std::set<int> rowTwoAndThreeComm;
+		std::set<int> colOneAndTwoComm;
+		std::set<int> colOneAndThreeComm;
+		std::set<int> colTwoAndThreeComm;
+	} block; 
+
+	std::unordered_map<int, block> blocks;
+
+	//create blocks map with all row and column commonalities
+	for (int box = 0; box < 9; box++)
+	{
+		int startIndex = (box / 3) * 27 + (box % 3) * 3;
+		int row = startIndex / 9;
+		int col = startIndex % 9;
+
+		block b;
+
+		//start with row
+		std::set<int> rowOneCommonalities = getCommonalities(startIndex, startIndex + 1, startIndex + 2);
+		std::set<int> rowTwoCommonalities = getCommonalities(startIndex + 9, startIndex + 10, startIndex + 11);
+		std::set<int> rowThreeCommonalities = getCommonalities(startIndex + 18, startIndex + 19, startIndex + 20);
+
+		//TODO: explain what code does here
+		b.rowOneAndTwoComm = getDifference(getIntersection(rowOneCommonalities, rowTwoCommonalities), getCandidates(sameRowColBox(row + 2, -1, -1)));
+		b.rowOneAndThreeComm = getDifference(getIntersection(rowOneCommonalities, rowThreeCommonalities), getCandidates(sameRowColBox(row + 1, -1, -1)));
+		b.rowTwoAndThreeComm = getDifference(getIntersection(rowTwoCommonalities, rowTwoCommonalities), getCandidates(sameRowColBox(row, -1, -1)));
+
+		//next on to the columns
+		std::set<int> colOneCommonalities = getCommonalities(startIndex, startIndex + 9, startIndex + 18);
+		std::set<int> colTwoCommonalities = getCommonalities(startIndex + 1, startIndex + 10, startIndex + 19);
+		std::set<int> colThreeCommonalities = getCommonalities(startIndex + 2, startIndex + 11, startIndex + 20);
+
+		b.colOneAndTwoComm = getDifference(getIntersection(colOneCommonalities, colTwoCommonalities), getCandidates(sameRowColBox(col + 2, -1, -1)));
+		b.colOneAndThreeComm = getDifference(getIntersection(colOneCommonalities, colThreeCommonalities), getCandidates(sameRowColBox(col + 1, -1, -1)));
+		b.colTwoAndThreeComm = getDifference(getIntersection(colTwoCommonalities, colTwoCommonalities), getCandidates(sameRowColBox(col, -1, -1)));
+
+		blocks[box] = b;
+	}
+
+	for (int box = 0; box < 9; box++)
+	{
+		block rowBox1 = blocks[(box - (box % 3)) + ((box + 1) % 3)];
+		block rowBox2 = blocks[(box - (box % 3)) + ((box + 2) % 3)];
+		block colBox1 = blocks[(box + 3) % 9];
+		block colBox2 = blocks[(box + 6) % 9];
+
+		std::set<int> rowOneAndTwoRemove = getIntersection(rowBox1.rowOneAndTwoComm, rowBox2.rowOneAndTwoComm);
+		std::set<int> rowOneAndThreeRemove = getIntersection(rowBox1.rowOneAndThreeComm, rowBox2.rowOneAndThreeComm);
+		std::set<int> rowTwoAndThreeRemove = getIntersection(rowBox1.rowTwoAndThreeComm, rowBox2.rowTwoAndThreeComm);
+		std::set<int> colOneAndTwoRemove = getIntersection(colBox1.colOneAndTwoComm, colBox2.colOneAndTwoComm);
+		std::set<int> colOneAndThreeRemove = getIntersection(colBox1.colOneAndThreeComm, colBox2.colOneAndThreeComm);
+		std::set<int> colTwoAndThreeRemove = getIntersection(colBox1.colTwoAndThreeComm, colBox2.colTwoAndThreeComm);
+
+
+	}
 }
 
 void AlgorithmicSolver::solve(void)

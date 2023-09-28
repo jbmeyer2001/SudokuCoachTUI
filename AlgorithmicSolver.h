@@ -17,6 +17,7 @@ private:
 	std::set<int> getCommonalities(int i1, int i2, int i3);
 	std::set<int> getCandidates(std::set<int> spaces);
 	bool removeCandidates(std::set<int> commonalities, int row, int col, int box);
+	bool blockBlockInteraction(void);
 
 public:
 	AlgorithmicSolver(int puzzle[9][9]);
