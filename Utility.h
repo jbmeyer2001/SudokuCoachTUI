@@ -20,6 +20,7 @@ std::set<int> getRow(int row);
 std::set<int> getCol(int col);
 std::set<int> getBox(int box);
 std::set<int> getIntersection(std::set<int> set1, std::set<int> set2);
+std::set<int> getIntersection(std::set<int> set1, std::set<int> set2, std::set<int> set3, std::set<int> set4);
 std::set<int> getUnion(std::set<int> set1, std::set<int> set2);
 std::set<int> getUnion(std::set<int> set1, std::set<int> set2, std::set<int> set3);
 std::set<int> getDifference(std::set<int> set1, std::set<int> set2);

@@ -237,11 +237,24 @@ std::set<int> AlgorithmicSolver::getCandidates(std::set<int> spaces)
 
 	for (it = spaces.begin(); it != spaces.end(); it++)
 	{
-		int val = *it;
-		if (boardMap->unfilled.contains(val))
+		std::set<int> candidates = getCandidates(*it);
+
+		if (!candidates.empty())
 		{
-			retval.insert(boardMap->spaceCandidates[val].begin(), boardMap->spaceCandidates[val].end());
+			retval.insert(candidates.begin(), candidates.end());
 		}
+	}
+
+	return retval;
+}
+
+std::set<int> AlgorithmicSolver::getCandidates(int space)
+{
+	std::set<int> retval;
+
+	if (boardMap->unfilled.contains(space))
+	{
+		retval.insert(boardMap->spaceCandidates[space].begin(), boardMap->spaceCandidates[space].end());
 	}
 
 	return retval;
@@ -527,6 +540,95 @@ getPartition:
 	return retval;
 }
 
+bool AlgorithmicSolver::XWing(void)
+{
+	//Step 1: select two rows and two columns, such that none of their (four) intersection points share a box
+	for (int row1 = 0; row1 <= 5; row1++)
+	{
+		int row2Start = ((row1 / 3) * 3) + 3;
+		for (int row2 = row2Start; row2 <= 8; row2++)
+		{
+			for (int col1 = 0; col1 <= 5; col1++)
+			{
+				int col2Start = ((col1 / 3) * 3) + 3;
+				for (int col2 = col2Start; col2 <= 8; col2++)
+				{
+					/*
+					There are now three sets that may be defined:
+						- the set of the intersections of rows and columns (4 spaces)
+						- the set of all spaces in both columns but NOT in the rows
+						- the set of all spaces in both rows but NOT in the columns
+
+					if there is a candidate that exists in ALL of the intersection spaces,
+					but doesn't exist as a candidate in any of the spaces in one of the row or column 
+					sets, then that candidate may be removed from all spaces in the other row/column set.
+					*/
+
+					//all spaces in selected rows, and selected columns
+					std::set<int> rowSpaces = getUnion(getRow(row1), getRow(row2));
+					std::set<int> colSpaces = getUnion(getCol(col1), getCol(col2));
+
+					//intersections set
+					std::set<int> intSpaces = getIntersection(rowSpaces, colSpaces);
+
+					//remove 
+					rowSpaces = getDifference(rowSpaces, intSpaces);
+					colSpaces = getDifference(colSpaces, intSpaces);
+
+					if (XWingHelper(rowSpaces, colSpaces, intSpaces))
+					{
+						//update the step info we were unable to in helper function
+						this->stepRowNum1 = row1;
+						this->stepRowNum2 = row2;
+						this->stepColNum1 = col1;
+						this->stepColNum2 = col2;
+
+						return true;
+					}
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+bool AlgorithmicSolver::XWingHelper(std::set<int> rowSpaces, std::set<int> colSpaces, std::set<int> intSpaces)
+{
+	//get the candidates from each of the above sets
+	std::set<int> rowCandidates = getCandidates(rowSpaces);
+	std::set<int> colCandidates = getCandidates(colSpaces);
+
+	//convert intSpaces to vector so we can index
+	std::vector<int> intSpacesVec(intSpaces.begin(), intSpaces.end());
+
+	//get the candidates that exist in all of the intersection spaces
+	std::set<int> intCandidates = getIntersection(getCandidates(intSpacesVec[0]),
+												  getCandidates(intSpacesVec[1]),
+												  getCandidates(intSpacesVec[2]),
+												  getCandidates(intSpacesVec[3]));
+
+	std::set<int>::iterator it;
+	for (it = intCandidates.begin(); it != intCandidates.end(); it++)
+	{
+		int candidate = *it;
+		bool inRows = rowCandidates.contains(candidate);
+		bool inCols = colCandidates.contains(candidate);
+
+		if (inRows ^ inCols)
+		{
+			std::set<int> affectedSpaces = inRows ? rowSpaces : colSpaces;
+
+			//we can ignore return value, since we know removeCandidates will be successfull
+			removeCandidates(candidate, affectedSpaces); 
+			updateStepXWing(candidate, affectedSpaces, inRows ? Set::ROW : Set::COL);
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool AlgorithmicSolver::removeCandidates(std::set<int> candidates, std::set<int> affectedSpaces, Step step)
 {
 	bool flag = false;
@@ -534,19 +636,9 @@ bool AlgorithmicSolver::removeCandidates(std::set<int> candidates, std::set<int>
 	{
 		int val = *candidates.begin();
 
-		std::set<int>::iterator it;
-		for (it = affectedSpaces.begin(); it != affectedSpaces.end(); it++)
-		{
-			//the space is unfilled, and one of the affected spaces contains a value that needs to be removed
-			//because of the block to row/col interaction
-			if (boardMap->unfilled.contains(*it) && boardMap->spaceCandidates[*it].contains(val))
-			{
-				boardMap->spaceCandidates[*it].erase(val);
-				flag = true;
-			}
-		}
-
 		candidates.erase(val);
+
+		flag = removeCandidates(val, affectedSpaces);
 
 		if (flag && ((step == Step::BLOCKROWCOL) || (step == Step::BLOCKBLOCK)))
 		{
@@ -558,11 +650,31 @@ bool AlgorithmicSolver::removeCandidates(std::set<int> candidates, std::set<int>
 	return flag;
 }
 
+bool AlgorithmicSolver::removeCandidates(int candidate, std::set<int> affectedSpaces)
+{
+	bool flag = false;
+	std::set<int>::iterator it;
+	for (it = affectedSpaces.begin(); it != affectedSpaces.end(); it++)
+	{
+		//the space is unfilled, and one of the affected spaces contains a value that needs to be removed
+		//because of the block to row/col interaction
+		if (boardMap->unfilled.contains(*it) && boardMap->spaceCandidates[*it].contains(candidate))
+		{
+			boardMap->spaceCandidates[*it].erase(candidate);
+			flag = true;
+		}
+	}
+
+	return flag;
+}
+
 void AlgorithmicSolver::clearStepInfo(void)
 {
 	this->step = Step::NOSTEP;
-	this->stepRowNum = -1;			
-	this->stepColNum = -1;			
+	this->stepRowNum1 = -1;
+	this->stepRowNum2 = -1;
+	this->stepColNum1 = -1;
+	this->stepColNum2 = -1;
 	this->stepVal = -1;				
 	this->stepSubsetNum1 = -1;		
 	this->stepSubsetNum2 = -1;		
@@ -577,16 +689,16 @@ void AlgorithmicSolver::clearStepInfo(void)
 
 void AlgorithmicSolver::updateStepSoleCandidate(int row, int col, int val)
 {
-	this->stepRowNum = row;
-	this->stepColNum = col;
+	this->stepRowNum1 = row;
+	this->stepColNum1 = col;
 	this->stepVal = val;
 	this->step = Step::SOLECANDIDATE;
 }
 
 void AlgorithmicSolver::updateStepUniqueCandidate(int row, int col, int val, int subset, Set set)
 {
-	this->stepRowNum = row;
-	this->stepColNum = col;
+	this->stepRowNum1 = row;
+	this->stepColNum1 = col;
 	this->stepVal = val;
 	this->stepSubsetNum1 = subset;
 	this->stepSet = set;
@@ -624,6 +736,14 @@ void AlgorithmicSolver::updateStepSubset(std::set<int> affectedSpaces, std::set<
 	this->step = step;
 }
 
+void AlgorithmicSolver::updateStepXWing(int candidate, std::set<int> affectedSpaces, Set set)
+{
+	this->step = Step::XWING;
+	this->stepVal = candidate;
+	this->stepAffectedSpaces = affectedSpaces;
+	this->stepSet = set;
+}
+
 void AlgorithmicSolver::nextStep(void)
 {
 	if (soleCandidate()) { return; }
@@ -632,6 +752,7 @@ void AlgorithmicSolver::nextStep(void)
 	if (blockBlockInteraction()) { return; }
 	if (nakedSubset()) { return; }
 	if (hiddenSubset()) { return; }
+	if (XWing()) { return; }
 
 	//update something to indicate we can't find another step
 }
@@ -672,6 +793,8 @@ std::string AlgorithmicSolver::getStep()
 		return "NAKEDSUBSET";
 	case Step::HIDDENSUBSET:
 		return "HIDDENSUBSET";
+	case Step::XWING:
+		return "XWING";
 	case Step::SOLVED:
 		return "SOLVED";
 	case Step::CANNOTSOLVE:
@@ -751,14 +874,24 @@ std::string AlgorithmicSolver::getStepBoxSubset(int which)
 	return "";
 }
 
-int AlgorithmicSolver::getStepRowNum()
+int AlgorithmicSolver::getStepRowNum1()
 {
-	return this->stepRowNum;
+	return this->stepRowNum1;
 }
 
-int AlgorithmicSolver::getStepColNum()
+int AlgorithmicSolver::getStepRowNum2()
 {
-	return this->stepColNum;
+	return this->stepRowNum2;
+}
+
+int AlgorithmicSolver::getStepColNum1()
+{
+	return this->stepColNum1;
+}
+
+int AlgorithmicSolver::getStepColNum2()
+{
+	return this->stepColNum2;
 }
 
 int AlgorithmicSolver::getStepVal()

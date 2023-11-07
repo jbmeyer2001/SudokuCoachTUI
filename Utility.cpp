@@ -251,12 +251,9 @@ std::set<int> getIntersection(std::set<int> set1, std::set<int> set2)
 	return retval;
 }
 
-std::set<int> getIntersection(std::set<int> set1, std::set<int> set2, std::set<int> set3)
+std::set<int> getIntersection(std::set<int> set1, std::set<int> set2, std::set<int> set3, std::set<int> set4)
 {
-	std::set<int> retval, partUnion;
-	std::set_intersection(set1.begin(), set1.end(), set2.begin(), set2.end(), std::inserter(partUnion, partUnion.end()));
-	std::set_intersection(partUnion.begin(), partUnion.end(), set3.begin(), set3.end(), std::inserter(retval, retval.end()));
-	return retval;
+	return getIntersection(getIntersection(set1, set2), getIntersection(set3, set4));
 }
 
 std::set<int> getUnion(std::set<int> set1, std::set<int> set2)

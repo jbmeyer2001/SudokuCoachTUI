@@ -20,8 +20,9 @@ private:
 		BLOCKBLOCK = 3,
 		NAKEDSUBSET = 4,
 		HIDDENSUBSET = 5,
-		SOLVED = 6,
-		CANNOTSOLVE = 7,
+		XWING = 6,
+		SOLVED = 7,
+		CANNOTSOLVE = 8,
 	};
 
 	enum class BoxSubset
@@ -35,8 +36,10 @@ private:
 	};
 
 	Step step = Step::NOSTEP;					//name of step taken (unique candidate, hidden subset, block-block interaction, etc.)
-	int stepRowNum = -1;						//location of value added
-	int stepColNum = -1;						//location of value added
+	int stepRowNum1 = -1;						//location of value added
+	int stepRowNum2 = -1;						//location of value added
+	int stepColNum1 = -1;						//location of value added
+	int stepColNum2 = -1;						//location of value added
 	int stepVal = -1;							//value added or removed
 	int stepSubsetNum1 = -1;					//contains 0-8, an indication of row/col/box number
 	int stepSubsetNum2 = -1;					//contains 0-8, an indication of row/col/box number
@@ -54,20 +57,24 @@ private:
 	bool blockColRowInteraction(void);
 	std::set<int> getCommonalities(int i1, int i2, int i3);
 	std::set<int> getCandidates(std::set<int> spaces);
+	std::set<int> getCandidates(int space);
 	bool blockBlockInteraction(void);
 	std::set<int> getUnfilledSpaces(std::set<int> spaces);
 	bool nakedSubset(void);
 	bool hiddenSubset(void);
 	bool removeCandidates(std::set<int> candidates, std::set<int> affectedSpaces, Step step);
+	bool removeCandidates(int candidate, std::set<int> affectedSpaces);
 	std::set<int> getNextPartition(std::vector<int> spaces, unsigned short& prev);
 	void clearStepInfo(void);
+	bool XWing(void);
+	bool XWingHelper(std::set<int> rows, std::set<int> cols, std::set<int> intersections);
 
 	/*
 	updateStepSoleCandidate updates the following:
 	this->step					- sole candidate
 	this->stepVal				- the value (1-9) placed by the most recent call to sole candidate
-	this->stepColNum			- the value (0-8) of the column that the value was placed in
-	this->stepRowNum			- the value (0-8) of the row that the value was placed in
+	this->stepColNum1			- the value (0-8) of the column that the value was placed in
+	this->stepRowNum1			- the value (0-8) of the row that the value was placed in
 	*/
 	void updateStepSoleCandidate(int row, int col, int val);
 
@@ -75,8 +82,8 @@ private:
 	UpdateStepUniqueCandidate updates the following:
 	this->step					- unique candidate
 	this->stepVal				- the value (1-9) placed by the most recent call to unique candidate
-	this->stepColNum			- the value (0-8) of the column that the value was placed in
-	this->stepRowNum			- the value (0-8) of the row that the value was placed in
+	this->stepColNum1			- the value (0-8) of the column that the value was placed in
+	this->stepRowNum1			- the value (0-8) of the row that the value was placed in
 	this->stepSubsetNum1		- the value of the row/col/box in which puzzle['row', 'col'] was the only space that could be 'value'
 	this->stepSet				- a string indicating whether stepSubsetNum1 was a row, a column, or a box
 	*/
@@ -104,6 +111,19 @@ private:
 	*/
 	void updateStepSubset(std::set<int> affectedSpaces, std::set<int> vals, Set set, int subset, Step step);
 
+	/*
+	updateStepXWing updates the following:
+	this->step					- Xwing
+	this->stepVal				- the value of the candidate that was removed from the affected spaces
+	this->stepAffectedSpaces	- the spaces that had val removed from their candidates
+	this->stepRowNum1			- to indicate one of the rows used in the x wing (not updated in this function, but updated by the time xwing finishes execution)
+	this->stepRowNum2			- to indicate the other row used in the x wing (not updated in this function, but updated by the time xwing finishes execution)
+	this->stepColNum1			- to indicate on eof the cols used in the x wing (not updated in this function, but updated by the time xwing finishes execution)
+	this->stepColNum2			- to indicate the other colused in the x wign (not updated in this function, but updated by the time xwing finishes execution)
+	this->stepSet				- to indicate whether the columns or the rows had some of their candidates removed
+	*/
+	void updateStepXWing(int candidate, std::set<int> affectedSpaces, Set set);
+
 	std::string getStepBoxSubset(int which);
 
 public:
@@ -117,8 +137,10 @@ public:
 	std::string getStepBoxSubset2();
 	std::string getStepBoxSubset3();
 	
-	int getStepRowNum();
-	int getStepColNum();
+	int getStepRowNum1();
+	int getStepRowNum2();
+	int getStepColNum1();
+	int getStepColNum2();
 	int getStepVal();
 	int getStepSubsetNum1();
 	int getStepSubsetNum2();
