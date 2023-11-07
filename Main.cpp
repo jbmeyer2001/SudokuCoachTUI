@@ -6,7 +6,7 @@ int main(void)
 {
 	//TODO: check for puzzle validity somewhere, if it's not already being done
 	SudokuMap sudokus;
-	Sudoku* sudoku = sudokus.findPuzzle("TestSudokuEasy");
+	Sudoku* sudoku = sudokus.findPuzzle("sudoku.comMaster");
 	
 	if (sudoku == NULL)
 		return 0;

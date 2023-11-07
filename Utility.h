@@ -3,6 +3,7 @@
 
 enum class Set
 {
+	NA = -1,
 	ROW = 0,
 	COL = 1,
 	BOX = 2,

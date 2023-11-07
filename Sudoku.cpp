@@ -36,7 +36,7 @@ Sudoku::Sudoku(std::filesystem::path path)
 
 	file.close();
 
-	solveSudoku(puzzleSolved, 0, 0); //TODO add something for if there is an error in the puzzle
+	//solveSudoku(puzzleSolved, 0, 0); //TODO add something for if there is an error in the puzzle
 
 	//TODO error handling on this entire class, so much error handling
 	
