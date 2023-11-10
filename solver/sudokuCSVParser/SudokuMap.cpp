@@ -1,6 +1,6 @@
 #include <filesystem>
 
-#include "SudokuMap.h"
+#include "../../include/SudokuMap.h"
 
 /*
 function description:
@@ -18,9 +18,7 @@ Sudoku* SudokuMap::findPuzzle(std::string name)
 }
 
 /*
-function description:
-Creates the head node for the list, and fills in the linked list with all the
-puzzles specified in the FilenameList.txt file.
+add a sudoku for every file (which are hopefully .csv files!) in the sudokus folder
 */
 SudokuMap::SudokuMap(void)
 {

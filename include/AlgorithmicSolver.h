@@ -11,6 +11,7 @@ class AlgorithmicSolver
 private:
 	int puzzle[9][9] = { -1 };
 	BoardMap* boardMap;
+
 	enum class Step
 	{
 		NOSTEP = -1,
@@ -55,15 +56,9 @@ private:
 	bool uniqueCandidate(void);
 	bool checkSpaceUniqueCandidate(int space, std::set<int> spaces, int subset, Set s);
 	bool blockColRowInteraction(void);
-	std::set<int> getCommonalities(int i1, int i2, int i3);
-	std::set<int> getCandidates(std::set<int> spaces);
-	std::set<int> getCandidates(int space);
 	bool blockBlockInteraction(void);
-	std::set<int> getUnfilledSpaces(std::set<int> spaces);
 	bool nakedSubset(void);
 	bool hiddenSubset(void);
-	bool removeCandidates(std::set<int> candidates, std::set<int> affectedSpaces, Step step);
-	bool removeCandidates(int candidate, std::set<int> affectedSpaces);
 	std::set<int> getNextPartition(std::vector<int> spaces, unsigned short& prev);
 	void clearStepInfo(void);
 	bool XWing(void);

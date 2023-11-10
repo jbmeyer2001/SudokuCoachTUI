@@ -18,42 +18,42 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Utility.cpp">
+    <ClCompile Include="solver\algorithmicSolver\AlgorithmicSolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RecursiveSolver.cpp">
+    <ClCompile Include="solver\boardMap\BoardMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AlgorithmicSolver.cpp">
+    <ClCompile Include="solver\boardMap\Sudoku.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BoardMap.cpp">
+    <ClCompile Include="solver\recursiveSolver\RecursiveSolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sudoku.cpp">
+    <ClCompile Include="solver\sudokuCSVParser\SudokuMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SudokuMap.cpp">
+    <ClCompile Include="solver\utility\Utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Utility.h">
+    <ClInclude Include="include\AlgorithmicSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RecursiveSolver.h">
+    <ClInclude Include="include\BoardMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AlgorithmicSolver.h">
+    <ClInclude Include="include\RecursiveSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BoardMap.h">
+    <ClInclude Include="include\Sudoku.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sudoku.h">
+    <ClInclude Include="include\SudokuMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SudokuMap.h">
+    <ClInclude Include="include\Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

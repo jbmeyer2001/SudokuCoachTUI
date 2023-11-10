@@ -1,4 +1,4 @@
-#include "Sudoku.h"
+#include "../../include/Sudoku.h"
 
 /*
 function description:

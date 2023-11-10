@@ -127,21 +127,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AlgorithmicSolver.cpp" />
-    <ClCompile Include="BoardMap.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="RecursiveSolver.cpp" />
-    <ClCompile Include="SudokuMap.cpp" />
-    <ClCompile Include="Sudoku.cpp" />
-    <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="solver\algorithmicSolver\AlgorithmicSolver.cpp" />
+    <ClCompile Include="solver\boardMap\BoardMap.cpp" />
+    <ClCompile Include="solver\boardMap\Sudoku.cpp" />
+    <ClCompile Include="solver\recursiveSolver\RecursiveSolver.cpp" />
+    <ClCompile Include="solver\sudokuCSVParser\SudokuMap.cpp" />
+    <ClCompile Include="solver\utility\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AlgorithmicSolver.h" />
-    <ClInclude Include="BoardMap.h" />
-    <ClInclude Include="RecursiveSolver.h" />
-    <ClInclude Include="SudokuMap.h" />
-    <ClInclude Include="Sudoku.h" />
-    <ClInclude Include="Utility.h" />
+    <ClInclude Include="include\AlgorithmicSolver.h" />
+    <ClInclude Include="include\BoardMap.h" />
+    <ClInclude Include="include\RecursiveSolver.h" />
+    <ClInclude Include="include\Sudoku.h" />
+    <ClInclude Include="include\SudokuMap.h" />
+    <ClInclude Include="include\Utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
