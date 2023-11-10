@@ -9,6 +9,30 @@ enum class Set
 	BOX = 2,
 };
 
+enum class BoxSubset
+{
+	NA = -1,
+	TOP = 0,
+	BOTTOM = 1,
+	LEFT = 2,
+	RIGHT = 3,
+	MIDDLE = 4,
+};
+
+enum class Step
+{
+	NOSTEP = -1,
+	SOLECANDIDATE = 0,
+	UNIQUECANDIDATE = 1,
+	BLOCKROWCOL = 2,
+	BLOCKBLOCK = 3,
+	NAKEDSUBSET = 4,
+	HIDDENSUBSET = 5,
+	XWING = 6,
+	SOLVED = 7,
+	CANNOTSOLVE = 8,
+};
+
 void printPuzzle(int puzzle[9][9]);
 bool isSolved(int puzzle[9][9]);
 bool duplicates(int array[9]);
