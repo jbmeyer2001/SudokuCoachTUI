@@ -105,22 +105,35 @@ std::set<int> BoardMap::getCandidates(int space)
 	return retval;
 }
 
-bool BoardMap::removeCandidates(std::set<int> candidates, std::set<int> affectedSpaces, bool removeSingleValue, int &value)
+//used if we want to only remove one of the candidates from all squares that contain it
+bool BoardMap::removeCandidates(std::set<int> candidates, std::set<int> affectedSpaces, int &value)
 {
 	bool flag = false;
 	while (!candidates.empty())
 	{
 		int val = *candidates.begin();
-
 		candidates.erase(val);
-
 		flag = removeCandidates(val, affectedSpaces);
 
-		if (flag && removeSingleValue)
+		if (flag)
 		{
 			value = val;
 			break;
 		}
+	}
+
+	return flag;
+}
+
+//used if we want to remove all possible candidates in the candidates set
+bool BoardMap::removeCandidates(std::set<int> candidates, std::set<int> affectedSpaces)
+{
+	bool flag = false;
+	while (!candidates.empty())
+	{
+		int val = *candidates.begin();
+		candidates.erase(val);
+		flag = removeCandidates(val, affectedSpaces);
 	}
 
 	return flag;

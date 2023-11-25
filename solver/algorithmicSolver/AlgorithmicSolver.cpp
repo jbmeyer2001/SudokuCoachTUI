@@ -16,6 +16,7 @@ AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9])
 	}
 	
 	boardMap = new BoardMap(this->puzzle);
+	step = new Step();
 }
 
 bool AlgorithmicSolver::soleCandidate(void)
@@ -36,7 +37,7 @@ bool AlgorithmicSolver::soleCandidate(void)
 			boardMap->insert(space, val);
 
 			//record step/technique used to get this square
-			updateStepSoleCandidate(row, col, val);
+			step->updateSoleCandidate(row, col, val);
 
 			//return true, meaning we've made changes to the puzzle and updated the step
 			return true;
@@ -99,7 +100,7 @@ bool AlgorithmicSolver::checkSpaceUniqueCandidate(int space, std::set<int> space
 		boardMap->insert(space, val);
 
 		//record step/technique used to get this square
-		updateStepUniqueCandidate(space / 9, space % 9, val, subset, set);
+		step->updateUniqueCandidate(space / 9, space % 9, val, subset, set);
 
 		//return true, meaning we've made changes to the puzzle and updated the step
 		return true;
@@ -159,51 +160,52 @@ bool AlgorithmicSolver::blockColRowInteraction(void)
 		//see if there is a block to col/row interaction on the top row of the box, record the step and return true if there is
 		std::set<int> affectedSpaces;
 		affectedSpaces = getDifference(getRow(row), getBox(box));
-		if (boardMap->removeCandidates(onlyRowOneComm, affectedSpaces, true, this->stepVal))
+		int val;
+
+		if (boardMap->removeCandidates(onlyRowOneComm, affectedSpaces, val))
 		{
-			//don't update val, because we don't know the val. removeCandidates updates stepVal.
-			updateStepBlockColRow(BoxSubset::TOP, Set::ROW, box, affectedSpaces); 
+			step->updateBlockRowCol(val, box, row, Set::ROW, BoxSubset::MIDDLE, affectedSpaces);
 			return true;
 		}
 
 		//see if there is a block to col/row interaction on the middle row of the box, record the step and return true if there is
 		affectedSpaces = getDifference(getRow(row + 1), getBox(box));
-		if (boardMap->removeCandidates(onlyRowTwoComm, affectedSpaces, true, this->stepVal))
+		if (boardMap->removeCandidates(onlyRowTwoComm, affectedSpaces, val))
 		{
-			updateStepBlockColRow(BoxSubset::MIDDLE, Set::ROW, box, affectedSpaces);
+			step->updateBlockRowCol(val, box, row + 1, Set::ROW, BoxSubset::MIDDLE, affectedSpaces);
 			return true;
 		}
 
 		//see if there is a block to col/row interaction on the bottom row of the box, record the step and return true if there is
 		affectedSpaces = getDifference(getRow(row + 2), getBox(box));
-		if (boardMap->removeCandidates(onlyRowThreeComm, affectedSpaces, true, this->stepVal))
+		if (boardMap->removeCandidates(onlyRowThreeComm, affectedSpaces, val))
 		{
-			updateStepBlockColRow(BoxSubset::BOTTOM, Set::ROW, box, affectedSpaces);
+			step->updateBlockRowCol(val, box, row + 2, Set::ROW, BoxSubset::BOTTOM, affectedSpaces);
 			return true;
 		}
 
 		//see if there is a block to col/row interaction on the left column of the box, record the step and return true if there is
 		affectedSpaces = getDifference(getCol(col), getBox(box));
-		if (boardMap->removeCandidates(onlyColOneComm, affectedSpaces, true, this->stepVal))
+		if (boardMap->removeCandidates(onlyColOneComm, affectedSpaces, val))
 		{
-			updateStepBlockColRow(BoxSubset::LEFT, Set::COL, box, affectedSpaces);
+			step->updateBlockRowCol(val, box, col, Set::COL, BoxSubset::RIGHT, affectedSpaces);
 			return true;
 		}
 
 		//see if there is a block to col/row interaction on the middle column of the box, record the step and return true if there is
 		affectedSpaces = getDifference(getCol(col + 1), getBox(box));
-		if (boardMap->removeCandidates(onlyColTwoComm, affectedSpaces, true, this->stepVal))
+		if (boardMap->removeCandidates(onlyColTwoComm, affectedSpaces, val))
 		{
-			updateStepBlockColRow(BoxSubset::MIDDLE, Set::COL, box, affectedSpaces);
+			step->updateBlockRowCol(val, box, col + 1, Set::COL, BoxSubset::RIGHT, affectedSpaces);
 			return true;
 
 		}
 
 		//see if there is a block to col/row interaction on the right column of the box, record the step and return true if there is
 		affectedSpaces = getDifference(getCol(col + 2), getBox(box));
-		if (boardMap->removeCandidates(onlyColThreeComm, affectedSpaces, true, this->stepVal))
+		if (boardMap->removeCandidates(onlyColThreeComm, affectedSpaces, val))
 		{
-			updateStepBlockColRow(BoxSubset::RIGHT, Set::ROW, box, affectedSpaces);
+			step->updateBlockRowCol(val, box, col + 2, Set::COL, BoxSubset::RIGHT, affectedSpaces);
 			return true;
 		}
 	}
@@ -274,45 +276,46 @@ bool AlgorithmicSolver::blockBlockInteraction(void)
 
 		std::set<int> affectedSpaces;
 		affectedSpaces = getDifference(getBox(box), getRow(row + 2));
-		if (boardMap->removeCandidates(rowOneAndTwoRemove, affectedSpaces, true, this->stepVal))
+		int val;
+
+		if (boardMap->removeCandidates(rowOneAndTwoRemove, affectedSpaces, val))
 		{
-			//don't update val, because we don't know the val. removeCandidates updates stepVal.
-			updateStepBlockBlock(BoxSubset::TOP, BoxSubset::MIDDLE, BoxSubset::BOTTOM, Set::ROW, row, row + 1, row + 2, affectedSpaces);
+			step->updateBlockBlock(val, row, row + 1, row + 2, Set::ROW, BoxSubset::TOP, BoxSubset::MIDDLE, BoxSubset::BOTTOM, affectedSpaces);
 			return true;
 		}
 
 		affectedSpaces = getDifference(getBox(box), getRow(row + 1));
-		if (boardMap->removeCandidates(rowOneAndThreeRemove, affectedSpaces, true, this->stepVal))
+		if (boardMap->removeCandidates(rowOneAndThreeRemove, affectedSpaces, val))
 		{
-			updateStepBlockBlock(BoxSubset::TOP, BoxSubset::BOTTOM, BoxSubset::MIDDLE, Set::ROW, row, row + 2, row + 1, affectedSpaces);
+			step->updateBlockBlock(val, row, row + 2, row + 1, Set::ROW, BoxSubset::TOP, BoxSubset::BOTTOM, BoxSubset::MIDDLE, affectedSpaces);
 			return true;
 		}
 
 		affectedSpaces = getDifference(getBox(box), getRow(row));
-		if (boardMap->removeCandidates(rowTwoAndThreeRemove, affectedSpaces, true, this->stepVal))
+		if (boardMap->removeCandidates(rowTwoAndThreeRemove, affectedSpaces, val))
 		{
-			updateStepBlockBlock(BoxSubset::MIDDLE, BoxSubset::BOTTOM, BoxSubset::TOP, Set::ROW, row + 1, row + 2, row, affectedSpaces);
+			step->updateBlockBlock(val, row + 1, row + 2, row, Set::ROW, BoxSubset::MIDDLE, BoxSubset::BOTTOM, BoxSubset::TOP, affectedSpaces);
 			return true;
 		}
 
 		affectedSpaces = getDifference(getBox(box), getCol(col + 2));
-		if (boardMap->removeCandidates(colOneAndTwoRemove, affectedSpaces, true, this->stepVal))
+		if (boardMap->removeCandidates(colOneAndTwoRemove, affectedSpaces, val))
 		{
-			updateStepBlockBlock(BoxSubset::LEFT, BoxSubset::MIDDLE, BoxSubset::RIGHT, Set::COL, col, col + 1, col + 2, affectedSpaces);
+			step->updateBlockBlock(val, col, col + 1, col + 2, Set::COL, BoxSubset::LEFT, BoxSubset::MIDDLE, BoxSubset::RIGHT, affectedSpaces);
 			return true;
 		}
 
 		affectedSpaces = getDifference(getBox(box), getCol(col + 1));
-		if (boardMap->removeCandidates(colOneAndThreeRemove, affectedSpaces, true, this->stepVal))
+		if (boardMap->removeCandidates(colOneAndThreeRemove, affectedSpaces, val))
 		{
-			updateStepBlockBlock(BoxSubset::LEFT, BoxSubset::RIGHT, BoxSubset::MIDDLE, Set::COL, col, col + 2, col + 1, affectedSpaces);
+			step->updateBlockBlock(val, col, col + 2, col + 1, Set::COL, BoxSubset::LEFT, BoxSubset::RIGHT, BoxSubset::MIDDLE, affectedSpaces);
 			return true;
 		}
 
 		affectedSpaces = getDifference(getBox(box), getCol(col));
-		if (boardMap->removeCandidates(colTwoAndThreeRemove, affectedSpaces, true, this->stepVal))
+		if (boardMap->removeCandidates(colTwoAndThreeRemove, affectedSpaces, val))
 		{
-			updateStepBlockBlock(BoxSubset::MIDDLE, BoxSubset::RIGHT, BoxSubset::LEFT, Set::COL, col + 1, col + 2, col, affectedSpaces);
+			step->updateBlockBlock(val, col + 1, col + 2, col, Set::COL, BoxSubset::MIDDLE, BoxSubset::RIGHT, BoxSubset::LEFT, affectedSpaces);
 			return true;
 		}
 	}
@@ -369,9 +372,9 @@ bool AlgorithmicSolver::nakedSubset(void)
 			if (equivSpaces.size() == candidates1.size()) //TODO think about moving this to teh above for loop
 			{
 				std::set<int> affectedSpaces = getDifference(spaces, equivSpaces);
-				if (boardMap->removeCandidates(candidates1, affectedSpaces, false, this->stepVal))
+				if (boardMap->removeCandidates(candidates1, affectedSpaces))
 				{
-					updateStepSubset(affectedSpaces, candidates1, set, i / 9, Step::NAKEDSUBSET);
+					step->updateNakedSubset(i / 9, set, candidates1, affectedSpaces);
 					return true;
 				}
 			}
@@ -420,9 +423,10 @@ bool AlgorithmicSolver::hiddenSubset(void)
 
 			if (getDifference(partitionCandidates, otherCandidates).size() == partition.size())
 			{
-				if (boardMap->removeCandidates(otherCandidates, partition, false, this->stepVal))
+				int unused = 0;
+				if (boardMap->removeCandidates(otherCandidates, partition))
 				{
-					updateStepSubset(partition, otherCandidates, set, i / 9, Step::HIDDENSUBSET);
+					step->updateHiddenSubset(i / 9, set, partition, otherCandidates);
 					return true;
 				}
 			}
@@ -505,14 +509,8 @@ bool AlgorithmicSolver::XWing(void)
 					rowSpaces = getDifference(rowSpaces, intSpaces);
 					colSpaces = getDifference(colSpaces, intSpaces);
 
-					if (XWingHelper(rowSpaces, colSpaces, intSpaces))
+					if (XWingHelper(rowSpaces, colSpaces, intSpaces, row1, row2, col1, col2))
 					{
-						//update the step info we were unable to in helper function
-						this->stepRowNum1 = row1;
-						this->stepRowNum2 = row2;
-						this->stepColNum1 = col1;
-						this->stepColNum2 = col2;
-
 						return true;
 					}
 				}
@@ -523,7 +521,7 @@ bool AlgorithmicSolver::XWing(void)
 	return false;
 }
 
-bool AlgorithmicSolver::XWingHelper(std::set<int> rowSpaces, std::set<int> colSpaces, std::set<int> intSpaces)
+bool AlgorithmicSolver::XWingHelper(std::set<int> rowSpaces, std::set<int> colSpaces, std::set<int> intSpaces, int row1, int row2, int col1, int col2)
 {
 	//get the candidates from each of the above sets
 	std::set<int> rowCandidates = boardMap->getCandidates(rowSpaces);
@@ -551,7 +549,7 @@ bool AlgorithmicSolver::XWingHelper(std::set<int> rowSpaces, std::set<int> colSp
 
 			//we can ignore return value, since we know removeCandidates will be successfull
 			boardMap->removeCandidates(candidate, affectedSpaces); 
-			updateStepXWing(candidate, affectedSpaces, inRows ? Set::ROW : Set::COL);
+			step->updateXWing(candidate, row1, row2, col1, col2, inRows ? Set::ROW : Set::COL, affectedSpaces);
 			return true;
 		}
 	}
@@ -559,85 +557,9 @@ bool AlgorithmicSolver::XWingHelper(std::set<int> rowSpaces, std::set<int> colSp
 	return false;
 }
 
-void AlgorithmicSolver::clearStepInfo(void)
-{
-	this->step = Step::NOSTEP;
-	this->stepRowNum1 = -1;
-	this->stepRowNum2 = -1;
-	this->stepColNum1 = -1;
-	this->stepColNum2 = -1;
-	this->stepVal = -1;				
-	this->stepSubsetNum1 = -1;		
-	this->stepSubsetNum2 = -1;		
-	this->stepSubsetNum3 = -1;		
-	this->stepSet = Set::NA;
-	this->stepBoxSubset1 = BoxSubset::NA;		
-	this->stepBoxSubset2 = BoxSubset::NA;
-	this->stepBoxSubset3 = BoxSubset::NA;
-	this->stepAffectedSpaces.clear();	
-	this->stepVals.clear();				
-}
-
-void AlgorithmicSolver::updateStepSoleCandidate(int row, int col, int val)
-{
-	this->stepRowNum1 = row;
-	this->stepColNum1 = col;
-	this->stepVal = val;
-	this->step = Step::SOLECANDIDATE;
-}
-
-void AlgorithmicSolver::updateStepUniqueCandidate(int row, int col, int val, int subset, Set set)
-{
-	this->stepRowNum1 = row;
-	this->stepColNum1 = col;
-	this->stepVal = val;
-	this->stepSubsetNum1 = subset;
-	this->stepSet = set;
-	this->step = Step::UNIQUECANDIDATE;
-}
-
-void AlgorithmicSolver::updateStepBlockColRow(BoxSubset boxLocation, Set set, int subset, std::set<int> affectedSpaces)
-{
-	this->stepBoxSubset1 = boxLocation;
-	this->stepSet = set;
-	this->stepSubsetNum1 = subset;
-	this->stepAffectedSpaces = affectedSpaces;
-	this->step = Step::BLOCKROWCOL;
-}
-
-void AlgorithmicSolver::updateStepBlockBlock(BoxSubset boxSubset1, BoxSubset boxSubset2, BoxSubset boxSubset3, Set set, int subset1, int subset2, int subset3, std::set<int> affectedSpaces)
-{
-	this->stepBoxSubset1 = boxSubset1;
-	this->stepBoxSubset2 = boxSubset2;
-	this->stepBoxSubset3 = boxSubset3;
-	this->stepSet = set;
-	this->stepSubsetNum1 = subset1;
-	this->stepSubsetNum2 = subset2;
-	this->stepSubsetNum3 = subset3;
-	this->stepAffectedSpaces = affectedSpaces;
-	this->step = Step::BLOCKBLOCK;
-}
-
-void AlgorithmicSolver::updateStepSubset(std::set<int> affectedSpaces, std::set<int> vals, Set set, int subset, Step step)
-{
-	this->stepAffectedSpaces = affectedSpaces;
-	this->stepVals = vals;
-	this->stepSet = set;
-	this->stepSubsetNum1 = subset;
-	this->step = step;
-}
-
-void AlgorithmicSolver::updateStepXWing(int candidate, std::set<int> affectedSpaces, Set set)
-{
-	this->step = Step::XWING;
-	this->stepVal = candidate;
-	this->stepAffectedSpaces = affectedSpaces;
-	this->stepSet = set;
-}
-
 void AlgorithmicSolver::nextStep(void)
 {
-	clearStepInfo();
+	step->clearStep();
 	if (soleCandidate()) { return; }
 	if (uniqueCandidate()) { return; }
 	if (blockColRowInteraction()) { return; }
@@ -657,7 +579,7 @@ void AlgorithmicSolver::solve(void)
 	while (!isSolved(puzzle) && i < 200)
 	{
 		nextStep();
-		std::cout << getStep() << std::endl; //for testing purposes
+		std::cout << step->getStep() << std::endl; //for testing purposes
 		i++;
 	}
 
@@ -665,153 +587,4 @@ void AlgorithmicSolver::solve(void)
 	{
 		printPuzzle(puzzle);
 	}
-}
-
-std::string AlgorithmicSolver::getStep()
-{
-	switch (this->step)
-	{
-	case Step::NOSTEP:
-		return "NOSTEP";
-	case Step::SOLECANDIDATE:
-		return "SOLECANDIDATE";
-	case Step::UNIQUECANDIDATE:
-		return "UNIQUECANDIDATE";
-	case Step::BLOCKROWCOL:
-		return "BLOCKROWCOL";
-	case Step::BLOCKBLOCK:
-		return "BLOCKBLOCK";
-	case Step::NAKEDSUBSET:
-		return "NAKEDSUBSET";
-	case Step::HIDDENSUBSET:
-		return "HIDDENSUBSET";
-	case Step::XWING:
-		return "XWING";
-	case Step::SOLVED:
-		return "SOLVED";
-	case Step::CANNOTSOLVE:
-		return "CANNOTSOLVE";
-	}
-
-	return "";
-}
-
-std::string AlgorithmicSolver::getStepSet()
-{
-	switch (this->stepSet)
-	{
-	case Set::NA:
-		return "NA";
-	case Set::ROW:
-		return "ROW";
-	case Set::COL:
-		return "COL";
-	case Set::BOX:
-		return "BOX";
-	}
-
-	return "";
-}
-
-std::string AlgorithmicSolver::getStepBoxSubset1()
-{
-	return getStepBoxSubset(1);
-}
-
-std::string AlgorithmicSolver::getStepBoxSubset2()
-{
-	return getStepBoxSubset(2);
-}
-
-std::string AlgorithmicSolver::getStepBoxSubset3()
-{
-	return getStepBoxSubset(3);
-}
-
-std::string AlgorithmicSolver::getStepBoxSubset(int which)
-{
-	BoxSubset boxsubset;
-	switch (which)
-	{
-	case 1:
-		boxsubset = this->stepBoxSubset1;
-		break;
-	case 2:
-		boxsubset = this->stepBoxSubset2;
-		break;
-	case 3:
-		boxsubset = this->stepBoxSubset3;
-		break;
-	default:
-		//TODO: ERROR HANDLING
-		break;
-	}
-
-	switch (boxsubset)
-	{
-	case BoxSubset::NA:
-		return "NA";
-	case BoxSubset::BOTTOM:
-		return "BOTTOM";
-	case BoxSubset::MIDDLE:
-		return "MIDDLE";
-	case BoxSubset::TOP:
-		return "TOP";
-	case BoxSubset::LEFT:
-		return "LEFT";
-	case BoxSubset::RIGHT:
-		return "RIGHT";
-	};
-
-	return "";
-}
-
-int AlgorithmicSolver::getStepRowNum1()
-{
-	return this->stepRowNum1;
-}
-
-int AlgorithmicSolver::getStepRowNum2()
-{
-	return this->stepRowNum2;
-}
-
-int AlgorithmicSolver::getStepColNum1()
-{
-	return this->stepColNum1;
-}
-
-int AlgorithmicSolver::getStepColNum2()
-{
-	return this->stepColNum2;
-}
-
-int AlgorithmicSolver::getStepVal()
-{
-	return this->stepVal;
-}
-
-int AlgorithmicSolver::getStepSubsetNum1()
-{
-	return this->stepSubsetNum1;
-}
-
-int AlgorithmicSolver::getStepSubsetNum2()
-{
-	return this->stepSubsetNum2;
-}
-
-int AlgorithmicSolver::getStepSubsetNum3()
-{
-	return this->stepSubsetNum3;
-}
-
-std::set<int> AlgorithmicSolver::getStepAffectedSpaces()
-{
-	return this->stepAffectedSpaces;
-}
-
-std::set<int> AlgorithmicSolver::getStepVals()
-{
-	return this->stepVals;
 }
