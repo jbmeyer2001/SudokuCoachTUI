@@ -2,10 +2,12 @@
 
 #include <set>
 #include <vector>
+#include <string>
 
 #include "BoardMap.h"
 #include "Utility.h"
 #include "Step.h"
+
 
 class AlgorithmicSolver
 {

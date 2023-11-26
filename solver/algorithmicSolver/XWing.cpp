@@ -1,5 +1,6 @@
 #include "AlgorithmicSolver.h"
 
+
 bool AlgorithmicSolver::XWing(void)
 {
 	//Step 1: select two rows and two columns, such that none of their (four) intersection points share a box
@@ -48,6 +49,7 @@ bool AlgorithmicSolver::XWing(void)
 }
 
 bool AlgorithmicSolver::XWingHelper(std::set<int> rowSpaces, std::set<int> colSpaces, std::set<int> intSpaces, int row1, int row2, int col1, int col2)
+
 {
 	//get the candidates from each of the above sets
 	std::set<int> rowCandidates = boardMap->getCandidates(rowSpaces);

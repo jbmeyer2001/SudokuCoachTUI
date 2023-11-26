@@ -129,6 +129,14 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="solver\algorithmicSolver\AlgorithmicSolver.cpp" />
+    <ClCompile Include="solver\algorithmicSolver\blockBlockInteraction.cpp" />
+    <ClCompile Include="solver\algorithmicSolver\blockColRowInteraction.cpp" />
+    <ClCompile Include="solver\algorithmicSolver\hiddenSubset.cpp" />
+    <ClCompile Include="solver\algorithmicSolver\nakedSubset.cpp" />
+    <ClCompile Include="solver\algorithmicSolver\soleCandidate.cpp" />
+    <ClCompile Include="solver\algorithmicSolver\stepInfo.cpp" />
+    <ClCompile Include="solver\algorithmicSolver\uniqueCandidate.cpp" />
+    <ClCompile Include="solver\algorithmicSolver\XWing.cpp" />
     <ClCompile Include="solver\boardMap\BoardMap.cpp" />
     <ClCompile Include="solver\boardMap\Sudoku.cpp" />
     <ClCompile Include="solver\recursiveSolver\RecursiveSolver.cpp" />
@@ -138,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="include\AlgorithmicSolver.h" />
     <ClInclude Include="include\BoardMap.h" />
+    <ClInclude Include="include\Header.h" />
     <ClInclude Include="include\RecursiveSolver.h" />
     <ClInclude Include="include\Sudoku.h" />
     <ClInclude Include="include\SudokuMap.h" />
