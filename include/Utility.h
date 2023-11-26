@@ -1,4 +1,6 @@
 #pragma once
+
+#include<string>
 #include<set>
 
 enum class Set
@@ -19,20 +21,6 @@ enum class BoxSubset
 	MIDDLE = 4,
 };
 
-enum class Step
-{
-	NOSTEP = -1,
-	SOLECANDIDATE = 0,
-	UNIQUECANDIDATE = 1,
-	BLOCKROWCOL = 2,
-	BLOCKBLOCK = 3,
-	NAKEDSUBSET = 4,
-	HIDDENSUBSET = 5,
-	XWING = 6,
-	SOLVED = 7,
-	CANNOTSOLVE = 8,
-};
-
 void printPuzzle(int puzzle[9][9]);
 bool isSolved(int puzzle[9][9]);
 bool duplicates(int array[9]);
@@ -48,3 +36,5 @@ std::set<int> getIntersection(std::set<int> set1, std::set<int> set2, std::set<i
 std::set<int> getUnion(std::set<int> set1, std::set<int> set2);
 std::set<int> getUnion(std::set<int> set1, std::set<int> set2, std::set<int> set3);
 std::set<int> getDifference(std::set<int> set1, std::set<int> set2);
+std::string setToString(Set set);
+std::string boxSubsetToString(BoxSubset boxSubset);

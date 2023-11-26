@@ -1,8 +1,6 @@
-#include <unordered_map>
-#include <string>
 #include <iostream>
 
-#include "../../include/AlgorithmicSolver.h"
+#include "AlgorithmicSolver.h"
 
 AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9])
 {
@@ -10,21 +8,17 @@ AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9])
 	{
 		for (int j = 0; j < 9; j++)
 		{
-			int val = puzzle[i][j];
-			this->puzzle[i][j] = val;
+			this->puzzle[i][j] = puzzle[i][j];
 		}
 	}
 	
 	boardMap = new BoardMap(this->puzzle);
+	step = new Step();
 }
-
-
-
-
 
 void AlgorithmicSolver::nextStep(void)
 {
-	clearStepInfo();
+	step->clearStep();
 	if (soleCandidate()) { return; }
 	if (uniqueCandidate()) { return; }
 	if (blockColRowInteraction()) { return; }
@@ -44,7 +38,7 @@ void AlgorithmicSolver::solve(void)
 	while (!isSolved(puzzle) && i < 200)
 	{
 		nextStep();
-		std::cout << getStep() << std::endl; //for testing purposes
+		std::cout << step->getStep() << std::endl; //for testing purposes
 		i++;
 	}
 

@@ -1,4 +1,4 @@
-#include "../../include/AlgorithmicSolver.h"
+#include "AlgorithmicSolver.h"
 
 bool AlgorithmicSolver::soleCandidate(void)
 {
@@ -18,7 +18,7 @@ bool AlgorithmicSolver::soleCandidate(void)
 			boardMap->insert(space, val);
 
 			//record step/technique used to get this square
-			stepInfo->updateStepSoleCandidate(row, col, val);
+			step->updateSoleCandidate(row, col, val);
 
 			//return true, meaning we've made changes to the puzzle and updated the step
 			return true;

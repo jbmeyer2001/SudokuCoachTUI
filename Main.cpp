@@ -1,6 +1,6 @@
-#include "include/SudokuMap.h"
-#include "include/AlgorithmicSolver.h"
-#include "include/Utility.h"
+#include "SudokuMap.h"
+#include "AlgorithmicSolver.h"
+#include "Utility.h"
 
 int main(void)
 {

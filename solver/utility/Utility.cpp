@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <iterator>
 
-#include "../../include/Utility.h"
+#include "Utility.h"
 
 /*
 	function description:
@@ -276,4 +276,53 @@ std::set<int> getDifference(std::set<int> set1, std::set<int> set2)
 	std::set<int> retval;
 	std::set_difference(set1.begin(), set1.end(), set2.begin(), set2.end(), std::inserter(retval, retval.end()));
 	return retval;
+}
+
+std::string setToString(Set set)
+{
+	std::string ret;
+
+	switch (set) {
+	case Set::ROW:
+		ret = "ROW";
+		break;
+	case Set::COL:
+		ret = "COL";
+		break;
+	case Set::BOX:
+		ret = "BOX";
+		break;
+	default:
+		ret = "NA";
+		break;
+	}
+
+	return ret;
+}
+
+std::string boxSubsetToString(BoxSubset boxSubset)
+{
+	std::string ret;
+
+	switch (boxSubset) {
+	case BoxSubset::TOP:
+		ret = "TOP";
+		break;
+	case BoxSubset::MIDDLE:
+		ret = "MIDDLE";
+		break;
+	case BoxSubset::BOTTOM:
+		ret = "BOTTOM";
+		break;
+	case BoxSubset::LEFT:
+		ret = "LEFT";
+		break;
+	case BoxSubset::RIGHT:
+		ret = "RIGHT";
+		break;
+	default:
+		ret = "NA";
+	}
+
+	return ret;
 }

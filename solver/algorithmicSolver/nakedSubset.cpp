@@ -1,4 +1,4 @@
-#include "../../include/AlgorithmicSolver.h"
+#include "AlgorithmicSolver.h"
 
 bool AlgorithmicSolver::nakedSubset(void)
 {
@@ -49,9 +49,9 @@ bool AlgorithmicSolver::nakedSubset(void)
 			if (equivSpaces.size() == candidates1.size()) //TODO think about moving this to teh above for loop
 			{
 				std::set<int> affectedSpaces = getDifference(spaces, equivSpaces);
-				if (boardMap->removeCandidates(candidates1, affectedSpaces, false, this->stepVal))
+				if (boardMap->removeCandidates(candidates1, affectedSpaces))
 				{
-					updateStepSubset(affectedSpaces, candidates1, set, i / 9, Step::NAKEDSUBSET);
+					step->updateNakedSubset(i / 9, set, candidates1, affectedSpaces);
 					return true;
 				}
 			}

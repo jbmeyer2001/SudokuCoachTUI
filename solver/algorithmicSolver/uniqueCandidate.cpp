@@ -1,4 +1,4 @@
-#include "../../include/AlgorithmicSolver.h"
+#include "AlgorithmicSolver.h"
 
 bool AlgorithmicSolver::uniqueCandidate(void)
 {
@@ -19,9 +19,9 @@ bool AlgorithmicSolver::uniqueCandidate(void)
 		boxSpaces.erase(space);
 
 		//if one call returns true, the rest won't execute
-		flag = flag || checkSpaceUniqueCandidate(space, boxSpaces, box, Set::BOX);
-		flag = flag || checkSpaceUniqueCandidate(space, rowSpaces, row, Set::ROW);
-		flag = flag || checkSpaceUniqueCandidate(space, colSpaces, col, Set::COL);
+		flag = flag || checkSpaceUniqueCandidate(space, boxSpaces, row, Set::BOX);
+		flag = flag || checkSpaceUniqueCandidate(space, rowSpaces, col, Set::ROW);
+		flag = flag || checkSpaceUniqueCandidate(space, colSpaces, box, Set::COL);
 
 		if (flag)
 			return true;
@@ -53,7 +53,7 @@ bool AlgorithmicSolver::checkSpaceUniqueCandidate(int space, std::set<int> space
 		boardMap->insert(space, val);
 
 		//record step/technique used to get this square
-		stepInfo->updateStepUniqueCandidate(space / 9, space % 9, val, subset, set);
+		step->updateUniqueCandidate(space / 9, space % 9, val, subset, set);
 
 		//return true, meaning we've made changes to the puzzle and updated the step
 		return true;

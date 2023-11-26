@@ -1,4 +1,4 @@
-#include "../../include/AlgorithmicSolver.h"
+#include "AlgorithmicSolver.h"
 
 bool AlgorithmicSolver::hiddenSubset(void)
 {
@@ -39,9 +39,10 @@ bool AlgorithmicSolver::hiddenSubset(void)
 
 			if (getDifference(partitionCandidates, otherCandidates).size() == partition.size())
 			{
-				if (boardMap->removeCandidates(otherCandidates, partition, false, this->stepVal))
+				int unused = 0;
+				if (boardMap->removeCandidates(otherCandidates, partition))
 				{
-					updateStepSubset(partition, otherCandidates, set, i / 9, Step::HIDDENSUBSET);
+					step->updateHiddenSubset(i / 9, set, partition, otherCandidates);
 					return true;
 				}
 			}

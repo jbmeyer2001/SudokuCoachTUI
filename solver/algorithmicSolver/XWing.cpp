@@ -1,4 +1,5 @@
-#include "../../include/AlgorithmicSolver.h"
+#include "AlgorithmicSolver.h"
+
 
 bool AlgorithmicSolver::XWing(void)
 {
@@ -35,14 +36,8 @@ bool AlgorithmicSolver::XWing(void)
 					rowSpaces = getDifference(rowSpaces, intSpaces);
 					colSpaces = getDifference(colSpaces, intSpaces);
 
-					if (XWingHelper(rowSpaces, colSpaces, intSpaces))
+					if (XWingHelper(rowSpaces, colSpaces, intSpaces, row1, row2, col1, col2))
 					{
-						//update the step info we were unable to in helper function
-						this->stepRowNum1 = row1;
-						this->stepRowNum2 = row2;
-						this->stepColNum1 = col1;
-						this->stepColNum2 = col2;
-
 						return true;
 					}
 				}
@@ -53,7 +48,8 @@ bool AlgorithmicSolver::XWing(void)
 	return false;
 }
 
-bool AlgorithmicSolver::XWingHelper(std::set<int> rowSpaces, std::set<int> colSpaces, std::set<int> intSpaces)
+bool AlgorithmicSolver::XWingHelper(std::set<int> rowSpaces, std::set<int> colSpaces, std::set<int> intSpaces, int row1, int row2, int col1, int col2)
+
 {
 	//get the candidates from each of the above sets
 	std::set<int> rowCandidates = boardMap->getCandidates(rowSpaces);
@@ -81,7 +77,7 @@ bool AlgorithmicSolver::XWingHelper(std::set<int> rowSpaces, std::set<int> colSp
 
 			//we can ignore return value, since we know removeCandidates will be successfull
 			boardMap->removeCandidates(candidate, affectedSpaces);
-			updateStepXWing(candidate, affectedSpaces, inRows ? Set::ROW : Set::COL);
+			step->updateXWing(candidate, row1, row2, col1, col2, inRows ? Set::ROW : Set::COL, affectedSpaces);
 			return true;
 		}
 	}
