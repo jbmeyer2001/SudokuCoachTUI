@@ -1,5 +1,5 @@
-#include "../../include/Utility.h"
-#include "../../include/RecursiveSolver.h"
+#include "Utility.h"
+#include "RecursiveSolver.h"
 
 /*
 	function description:

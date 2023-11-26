@@ -1,5 +1,5 @@
-#include "../../include/BoardMap.h"
-#include "../../include/Utility.h"
+#include "BoardMap.h"
+#include "Utility.h"
 
 BoardMap::BoardMap(int puzzle[9][9])
 {

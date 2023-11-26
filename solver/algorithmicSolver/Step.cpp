@@ -1,4 +1,4 @@
-#include "../../include/Step.h"
+#include "Step.h"
 
 void Step::clearStep(void)
 {
