@@ -11,6 +11,9 @@ struct py_solver {
 	Step step;
 	AlgorithmicSolver* algorithmicSolver;
 
+	//create an instance of AlgorithmicSolver using an ndarray of ints.
+	//also create a step, and pass it to algorithmic solver as a reference, 
+	//for easy access of step information
 	py_solver(ndarray_int array)
 	{
 		if (array.ndim() != 2) {
@@ -104,7 +107,7 @@ PYBIND11_MODULE(sudoku, m)
 		.def_property_readonly("affected_spaces", ([](XWing xWing) { return xWing.affectedSpaces; }));
 	py::class_<Step>(m, "step")
 		.def(py::init<>())
-		.def_property_readonly("Name", &Step::getStep)
+		.def_property_readonly("name", &Step::getStep)
 		.def_property_readonly("sole_candidate", &Step::getSoleCandidate)
 		.def_property_readonly("unique_candidate", &Step::getUniqueCandidate)
 		.def_property_readonly("block_row_col", &Step::getBlockRowCol)
