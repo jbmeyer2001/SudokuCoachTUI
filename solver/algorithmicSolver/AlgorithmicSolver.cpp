@@ -2,7 +2,7 @@
 
 #include "AlgorithmicSolver.h"
 
-AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9])
+AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9], Step& step)
 {
 	for (int i = 0; i < 9; i++)
 	{
@@ -13,7 +13,7 @@ AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9])
 	}
 	
 	boardMap = new BoardMap(this->puzzle);
-	step = new Step();
+	this->step = &step;
 }
 
 void AlgorithmicSolver::nextStep(void)
@@ -30,11 +30,11 @@ void AlgorithmicSolver::nextStep(void)
 	//update something to indicate we can't find another step
 }
 
+//this function is used to test the c++ algorithmic solver implementation
 void AlgorithmicSolver::solve(void)
 {
 	int i = 0;
 	
-	//super jank, change later
 	while (!isSolved(puzzle) && i < 200)
 	{
 		nextStep();

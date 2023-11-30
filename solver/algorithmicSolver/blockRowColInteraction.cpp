@@ -35,18 +35,18 @@ bool AlgorithmicSolver::blockColRowInteraction(void)
 		The reason the code does this is because in order for the values in the commonalities to be useful, they must not occur elsewhere in the box,
 		see 'Block and Column / Row Step' at https://www.kristanix.com/sudokuepic/sudoku-solving-techniques.php to see why
 		*/
-		std::set onlyRowOneComm = getDifference(rowOneCommonalities, boardMap->getCandidates(getDifference(getBox(box), getRow(row))));
-		std::set onlyRowTwoComm = getDifference(rowTwoCommonalities, boardMap->getCandidates(getDifference(getBox(box), getRow(row + 1))));
-		std::set onlyRowThreeComm = getDifference(rowThreeCommonalities, boardMap->getCandidates(getDifference(getBox(box), getRow(row + 2))));
+		std::set<int> onlyRowOneComm = getDifference(rowOneCommonalities, boardMap->getCandidates(getDifference(getBox(box), getRow(row))));
+		std::set<int> onlyRowTwoComm = getDifference(rowTwoCommonalities, boardMap->getCandidates(getDifference(getBox(box), getRow(row + 1))));
+		std::set<int> onlyRowThreeComm = getDifference(rowThreeCommonalities, boardMap->getCandidates(getDifference(getBox(box), getRow(row + 2))));
 
 		//next do the columns
 		std::set<int> colOneCommonalities = boardMap->getCommonalities(startIndex, startIndex + 9, startIndex + 18);
 		std::set<int> colTwoCommonalities = boardMap->getCommonalities(startIndex + 1, startIndex + 10, startIndex + 19);
 		std::set<int> colThreeCommonalities = boardMap->getCommonalities(startIndex + 2, startIndex + 11, startIndex + 20);
 
-		std::set onlyColOneComm = getDifference(colOneCommonalities, boardMap->getCandidates(getDifference(getBox(box), getCol(col))));
-		std::set onlyColTwoComm = getDifference(colTwoCommonalities, boardMap->getCandidates(getDifference(getBox(box), getCol(col + 1))));
-		std::set onlyColThreeComm = getDifference(colThreeCommonalities, boardMap->getCandidates(getDifference(getBox(box), getCol(col + 2))));
+		std::set<int> onlyColOneComm = getDifference(colOneCommonalities, boardMap->getCandidates(getDifference(getBox(box), getCol(col))));
+		std::set<int> onlyColTwoComm = getDifference(colTwoCommonalities, boardMap->getCandidates(getDifference(getBox(box), getCol(col + 1))));
+		std::set<int> onlyColThreeComm = getDifference(colThreeCommonalities, boardMap->getCandidates(getDifference(getBox(box), getCol(col + 2))));
 
 		//see if there is a block to col/row interaction on the top row of the box, record the step and return true if there is
 		std::set<int> affectedSpaces;

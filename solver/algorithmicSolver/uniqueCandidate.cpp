@@ -38,7 +38,7 @@ bool AlgorithmicSolver::checkSpaceUniqueCandidate(int space, std::set<int> space
 	for (it = spaces.begin(); it != spaces.end(); it++)
 	{
 		int val = *it;
-		if (boardMap->unfilled.contains(val))
+		if (boardMap->unfilled.count(val) > 0)
 		{
 			std::set<int> removeCandidates = boardMap->spaceCandidates[val];
 			candidates = getDifference(candidates, removeCandidates);

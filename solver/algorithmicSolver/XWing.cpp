@@ -68,8 +68,8 @@ bool AlgorithmicSolver::XWingHelper(std::set<int> rowSpaces, std::set<int> colSp
 	for (it = intCandidates.begin(); it != intCandidates.end(); it++)
 	{
 		int candidate = *it;
-		bool inRows = rowCandidates.contains(candidate);
-		bool inCols = colCandidates.contains(candidate);
+		bool inRows = (rowCandidates.count(candidate) > 0);
+		bool inCols = (colCandidates.count(candidate) > 0);
 
 		if (inRows ^ inCols)
 		{

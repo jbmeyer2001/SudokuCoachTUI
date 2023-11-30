@@ -1,0 +1,14 @@
+SudokuCoach.sln
+SudokuCoach.vcxproj
+SudokuCoach.vcxproj.filters
+SudokuCoach.vcxproj.user
+.vs/
+Debug/
+x64/
+solver/pybind11Module/.vs/
+solver/pybind11Module/Debug/
+solver/pybind11Module/x64/
+solver/pybind11Module/pybind11Module.sln
+solver/pybind11Module/pybind11Module.vcxproj
+solver/pybind11Module/pybind11Module.vcxproj.filters
+solver/pybind11Module/pybind11Module.vcxproj.user

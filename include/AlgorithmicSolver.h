@@ -41,8 +41,11 @@ private:
 	bool XWingHelper(std::set<int> rowSpaces, std::set<int> colSpaces, std::set<int> intSpaces, int row1, int row2, int col1, int col2);
 
 public:
-	AlgorithmicSolver(int puzzle[9][9]);
+	AlgorithmicSolver(int puzzle[9][9], Step& step);
+
 	void nextStep(void);
 	void solve(void);
+
+	std::set<int> getUnfilled(void) { return this->boardMap->unfilled; }
 };
 
