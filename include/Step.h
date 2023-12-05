@@ -107,7 +107,7 @@ struct XWing {
 
 class Step {
 private:
-	std::string step;
+	std::string name;
 	struct SoleCandidate soleCandidate;
 	struct UniqueCandidate uniqueCandidate;
 	struct BlockRowCol blockRowCol;
@@ -127,7 +127,7 @@ private:
 
 public:
 	//getters
-	std::string getStep(void) { return this->step; }
+	std::string getStep(void) { return this->name; }
 	SoleCandidate getSoleCandidate(void) { return soleCandidate; }
 	UniqueCandidate getUniqueCandidate(void) { return uniqueCandidate; }
 	BlockRowCol getBlockRowCol(void) { return blockRowCol; }

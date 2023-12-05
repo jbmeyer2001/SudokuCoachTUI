@@ -2,12 +2,12 @@
 
 void Step::clearStep(void)
 {
-	this->step = "NOSTEP";
+	this->name = "NOSTEP";
 }
 
 void Step::updateSoleCandidate(int row, int col, int val)
 {
-	this->step = "SOLECANDIDATE";
+	this->name = "SOLECANDIDATE";
 	this->soleCandidate.row = row;
 	this->soleCandidate.col = col;
 	this->soleCandidate.val = val;
@@ -15,7 +15,7 @@ void Step::updateSoleCandidate(int row, int col, int val)
 
 void Step::updateUniqueCandidate(int row, int col, int val, int rowColBoxNum, Set set)
 {
-	this->step = "UNIQUECANDIDATE";
+	this->name = "UNIQUECANDIDATE";
 	this->uniqueCandidate.row = row;
 	this->uniqueCandidate.col = col;
 	this->uniqueCandidate.val = val;
@@ -25,7 +25,7 @@ void Step::updateUniqueCandidate(int row, int col, int val, int rowColBoxNum, Se
 
 void Step::updateBlockRowCol(int val, int boxNum, int rowColNum, Set rowCol, BoxSubset boxSubset, std::set<int> affectedSpaces)
 {
-	this->step = "BLOCKROWCOL";
+	this->name = "BLOCKROWCOL";
 	this->blockRowCol.val = val;
 	this->blockRowCol.boxNum = boxNum;
 	this->blockRowCol.rowColNum = rowColNum;
@@ -36,7 +36,7 @@ void Step::updateBlockRowCol(int val, int boxNum, int rowColNum, Set rowCol, Box
 
 void Step::updateBlockBlock(int val, int box1, int box2, int box3, Set rowCol, BoxSubset boxSubset1, BoxSubset boxSubset2, BoxSubset boxSubset3, std::set<int> affectedSpaces)
 {
-	this->step = "BLOCKBLOCK";
+	this->name = "BLOCKBLOCK";
 	this->blockBlock.val = val;
 	this->blockBlock.box1 = box1;
 	this->blockBlock.box2 = box2;
@@ -50,7 +50,7 @@ void Step::updateBlockBlock(int val, int box1, int box2, int box3, Set rowCol, B
 
 void Step::updateNakedSubset(int rowColBoxNum, Set rowColBox, std::set<int> affectedSpaces, std::set<int> vals)
 {
-	this->step = "NAKEDSUBSET";
+	this->name = "NAKEDSUBSET";
 	this->nakedSubset.rowColBoxNum = rowColBoxNum;
 	this->nakedSubset.rowColBox = setToString(rowColBox);
 	this->nakedSubset.vals = vals;
@@ -59,7 +59,7 @@ void Step::updateNakedSubset(int rowColBoxNum, Set rowColBox, std::set<int> affe
 
 void Step::updateHiddenSubset(int rowColBoxNum, Set rowColBox, std::set<int> affectedSpaces, std::set<int> vals)
 {
-	this->step = "HIDDENSUBSET";
+	this->name = "HIDDENSUBSET";
 	this->hiddenSubset.rowColBoxNum = rowColBoxNum;
 	this->hiddenSubset.rowColBox = setToString(rowColBox);
 	this->hiddenSubset.vals = vals;
@@ -68,7 +68,7 @@ void Step::updateHiddenSubset(int rowColBoxNum, Set rowColBox, std::set<int> aff
 
 void Step::updateXWing(int val, int row1, int row2, int col1, int col2, Set rowCol, std::set<int> affectedSpaces)
 {
-	this->step = "XWING";
+	this->name = "XWING";
 	this->xWing.val = val;
 	this->xWing.row1 = row1;
 	this->xWing.row2 = row2;

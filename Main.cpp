@@ -1,10 +1,10 @@
 #include "SudokuMap.h"
 #include "AlgorithmicSolver.h"
 #include "Utility.h"
+#include "CheckSudoku.h"
 
 int main(void)
 {
-	//TODO: check for puzzle validity somewhere, if it's not already being done
 	SudokuMap sudokus;
 	Sudoku* sudoku = sudokus.findPuzzle("XWingTest");
 	
@@ -12,8 +12,9 @@ int main(void)
 		return 0;
 
 	int puzzle[9][9];
-	sudoku->getUnsolvedPuzzle(puzzle);
+	sudoku->getPuzzle(puzzle); 
 
-	AlgorithmicSolver solver(puzzle);
+	Step step;
+	AlgorithmicSolver solver(puzzle, step);
 	solver.solve();
 }

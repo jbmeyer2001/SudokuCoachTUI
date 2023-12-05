@@ -16,6 +16,9 @@ private:
 	BoardMap* boardMap;
 	Step* step;
 
+	//check to see if puzzle is solved
+	bool solved(void);
+
 	//check to see if we can identify a sole candidate
 	bool soleCandidate(void);
 
@@ -39,6 +42,8 @@ private:
 	//check to see if we can identify an xwing
 	bool XWing(void);
 	bool XWingHelper(std::set<int> rowSpaces, std::set<int> colSpaces, std::set<int> intSpaces, int row1, int row2, int col1, int col2);
+
+	void checkIfSolveable(void);
 
 public:
 	AlgorithmicSolver(int puzzle[9][9], Step& step);

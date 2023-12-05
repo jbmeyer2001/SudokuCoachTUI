@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "AlgorithmicSolver.h"
+#include "CheckSudoku.h"
 
 AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9], Step& step)
 {
@@ -19,6 +20,7 @@ AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9], Step& step)
 void AlgorithmicSolver::nextStep(void)
 {
 	step->clearStep();
+	if (solved()) { return; }
 	if (soleCandidate()) { return; }
 	if (uniqueCandidate()) { return; }
 	if (blockColRowInteraction()) { return; }
@@ -26,8 +28,7 @@ void AlgorithmicSolver::nextStep(void)
 	if (nakedSubset()) { return; }
 	if (hiddenSubset()) { return; }
 	if (XWing()) { return; }
-
-	//update something to indicate we can't find another step
+	checkIfSolveable();
 }
 
 //this function is used to test the c++ algorithmic solver implementation
@@ -45,5 +46,25 @@ void AlgorithmicSolver::solve(void)
 	if (isSolved(puzzle))
 	{
 		printPuzzle(puzzle);
+	}
+}
+
+bool AlgorithmicSolver::solved(void)
+{
+	if (isSolved(this->puzzle)) {
+		this->step->name = "SOLVED";
+		return true;
+	}
+
+	return false;
+}
+
+void AlgorithmicSolver::checkIfSolveable(void)
+{
+	if (checkSudoku(this->puzzle)) {
+		this->step->name = "CANTSOLVE";
+	} 
+	else {
+		this->step->name = "UNSOLVEABLE";
 	}
 }

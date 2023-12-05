@@ -97,7 +97,7 @@ std::set<int> BoardMap::getCandidates(int space)
 {
 	std::set<int> retval;
 	
-	if (unfilled.count(space) > 0)
+	if (unfilled.contains(space))
 	{
 		retval.insert(spaceCandidates[space].begin(), spaceCandidates[space].end());
 	}
@@ -147,7 +147,7 @@ bool BoardMap::removeCandidates(int candidate, std::set<int> affectedSpaces)
 	{
 		//the space is unfilled, and one of the affected spaces contains a value that needs to be removed
 		//because of the block to row/col interaction
-		if (unfilled.count(*it) > 0 && spaceCandidates[*it].count(candidate) > 0)
+		if (unfilled.contains(*it) && spaceCandidates[*it].contains(candidate))
 		{
 			spaceCandidates[*it].erase(candidate);
 			flag = true;
@@ -166,7 +166,7 @@ std::set<int> BoardMap::getUnfilledSpaces(std::set<int> spaces)
 	{
 		int space = *it;
 
-		if (unfilled.count(space) > 0)
+		if (unfilled.contains(space))
 		{
 			retval.emplace(space);
 		}
