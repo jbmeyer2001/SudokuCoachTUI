@@ -1,8 +1,14 @@
 #include "BoardMap.h"
 #include "Utility.h"
 
-BoardMap::BoardMap(int puzzle[9][9])
+void BoardMap::init(int puzzle[9][9])
 {
+	unfilled.clear();
+	for (int i = 0; i < 81; i++)
+	{
+		spaceCandidates[i].clear();
+	}
+
 	std::set<int> rows[9];
 	std::set<int> cols[9];
 	std::set<int> boxes[9];

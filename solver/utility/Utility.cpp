@@ -194,13 +194,13 @@ int nextColumn(int row_num, int column_num)
 	}
 }
 
-void copyPuzzle(int fullPuzzle[9][9], int emptyPuzzle[9][9])
+void copyPuzzle(int src[9][9], int dest[9][9])
 {
 	for(int i = 0; i < 9; i++)
 	{
 		for (int j = 0; j < 9; j++)
 		{
-			emptyPuzzle[i][j] = fullPuzzle[i][j];
+			dest[i][j] = src[i][j];
 		}
 	}
 }

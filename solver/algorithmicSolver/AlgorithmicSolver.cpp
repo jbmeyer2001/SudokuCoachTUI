@@ -1,4 +1,5 @@
 #include <iostream>
+#include <Windows.h>
 
 #include "AlgorithmicSolver.h"
 #include "CheckSudoku.h"
@@ -10,10 +11,11 @@ AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9], Step& step)
 		for (int j = 0; j < 9; j++)
 		{
 			this->puzzle[i][j] = puzzle[i][j];
+			this->puzzleStart[i][j] = puzzle[i][j];
 		}
 	}
 	
-	boardMap = new BoardMap(this->puzzle);
+	boardMap.init(puzzle);
 	this->step = &step;
 }
 
@@ -31,40 +33,47 @@ void AlgorithmicSolver::nextStep(void)
 	checkIfSolveable();
 }
 
-//this function is used to test the c++ algorithmic solver implementation
-void AlgorithmicSolver::solve(void)
+bool AlgorithmicSolver::solved(void) 
 {
-	int i = 0;
-	
-	while (!isSolved(puzzle) && i < 200)
-	{
-		nextStep();
-		std::cout << step->getStep() << std::endl; //for testing purposes
-		i++;
-	}
-
 	if (isSolved(puzzle))
 	{
-		printPuzzle(puzzle);
-	}
-}
-
-bool AlgorithmicSolver::solved(void)
-{
-	if (isSolved(this->puzzle)) {
-		this->step->name = "SOLVED";
+		step->name = StepID::SOLVED;
 		return true;
 	}
 
 	return false;
 }
+StepID AlgorithmicSolver::check(void)
+{
+	//attempt to solve the puzzle, stop when it's either solved or we realize we can't solve it
+	StepID cur = step->getStep();
+	while (cur != StepID::SOLVED && cur != StepID::CANTSOLVE && cur != StepID::UNSOLVEABLE) {
+		nextStep();
+		cur = step->getStep();
+	}
+
+	//copy the puzzle's original values back, and reinitialize the board map 
+	copyPuzzle(puzzleStart, puzzle);
+	boardMap.init(puzzle);
+
+	//set the return value and clear the step
+	StepID retval = step->getStep();
+	step->clearStep();
+	return retval;
+}
 
 void AlgorithmicSolver::checkIfSolveable(void)
 {
 	if (checkSudoku(this->puzzle)) {
-		this->step->name = "CANTSOLVE";
+		this->step->name = StepID::CANTSOLVE;
 	} 
 	else {
-		this->step->name = "UNSOLVEABLE";
+		this->step->name = StepID::UNSOLVEABLE;
 	}
 }
+
+void AlgorithmicSolver::printStep(void)
+{
+	step->printStep(this->puzzle);
+}
+

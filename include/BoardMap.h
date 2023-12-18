@@ -18,7 +18,7 @@ private:
 	std::set<int> getCommonalities(int i1, int i2, int i3);
 
 public:
-	BoardMap(int puzzle[9][9]);
+	void init(int puzzle[9][9]);
 	void insert(int spaceNum, int val);
 
 	friend class AlgorithmicSolver;

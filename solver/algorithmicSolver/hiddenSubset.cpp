@@ -10,15 +10,15 @@ bool AlgorithmicSolver::hiddenSubset(void)
 		switch (i % 9)
 		{
 		case 0:
-			spaces = boardMap->getUnfilledSpaces(getRow(i / 9));
+			spaces = boardMap.getUnfilledSpaces(getRow(i / 9));
 			set = Set::ROW;
 			break;
 		case 1:
-			spaces = boardMap->getUnfilledSpaces(getCol(i / 9));
+			spaces = boardMap.getUnfilledSpaces(getCol(i / 9));
 			set = Set::COL;
 			break;
 		case 2:
-			spaces = boardMap->getUnfilledSpaces(getBox(i / 9));
+			spaces = boardMap.getUnfilledSpaces(getBox(i / 9));
 			set = Set::BOX;
 			break;
 		}
@@ -34,13 +34,13 @@ bool AlgorithmicSolver::hiddenSubset(void)
 		{
 			std::set<int> other = getDifference(spaces, partition);
 
-			std::set<int> partitionCandidates = boardMap->getCandidates(partition);
-			std::set<int> otherCandidates = boardMap->getCandidates(other);
+			std::set<int> partitionCandidates = boardMap.getCandidates(partition);
+			std::set<int> otherCandidates = boardMap.getCandidates(other);
 
 			if (getDifference(partitionCandidates, otherCandidates).size() == partition.size())
 			{
 				int unused = 0;
-				if (boardMap->removeCandidates(otherCandidates, partition))
+				if (boardMap.removeCandidates(otherCandidates, partition))
 				{
 					step->updateHiddenSubset(i / 9, set, partition, otherCandidates);
 					return true;

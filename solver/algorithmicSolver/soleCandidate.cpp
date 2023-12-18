@@ -3,10 +3,10 @@
 bool AlgorithmicSolver::soleCandidate(void)
 {
 	std::set<int>::iterator it;
-	for (it = boardMap->unfilled.begin(); it != boardMap->unfilled.end(); it++)
+	for (it = boardMap.unfilled.begin(); it != boardMap.unfilled.end(); it++)
 	{
 		int space = *it;
-		std::set<int> candidates = boardMap->getCandidates(space);
+		std::set<int> candidates = boardMap.getCandidates(space);
 		if (candidates.size() == 1)
 		{
 			int row = space / 9;
@@ -15,7 +15,7 @@ bool AlgorithmicSolver::soleCandidate(void)
 
 			//place number into puzzle
 			puzzle[space / 9][space % 9] = val;
-			boardMap->insert(space, val);
+			boardMap.insert(space, val);
 
 			//record step/technique used to get this square
 			step->updateSoleCandidate(row, col, val);

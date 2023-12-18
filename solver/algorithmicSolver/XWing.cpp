@@ -52,17 +52,17 @@ bool AlgorithmicSolver::XWingHelper(std::set<int> rowSpaces, std::set<int> colSp
 
 {
 	//get the candidates from each of the above sets
-	std::set<int> rowCandidates = boardMap->getCandidates(rowSpaces);
-	std::set<int> colCandidates = boardMap->getCandidates(colSpaces);
+	std::set<int> rowCandidates = boardMap.getCandidates(rowSpaces);
+	std::set<int> colCandidates = boardMap.getCandidates(colSpaces);
 
 	//convert intSpaces to vector so we can index
 	std::vector<int> intSpacesVec(intSpaces.begin(), intSpaces.end());
 
 	//get the candidates that exist in all of the intersection spaces
-	std::set<int> intCandidates = getIntersection(boardMap->getCandidates(intSpacesVec[0]),
-		boardMap->getCandidates(intSpacesVec[1]),
-		boardMap->getCandidates(intSpacesVec[2]),
-		boardMap->getCandidates(intSpacesVec[3]));
+	std::set<int> intCandidates = getIntersection(boardMap.getCandidates(intSpacesVec[0]),
+		boardMap.getCandidates(intSpacesVec[1]),
+		boardMap.getCandidates(intSpacesVec[2]),
+		boardMap.getCandidates(intSpacesVec[3]));
 
 	std::set<int>::iterator it;
 	for (it = intCandidates.begin(); it != intCandidates.end(); it++)
@@ -76,7 +76,7 @@ bool AlgorithmicSolver::XWingHelper(std::set<int> rowSpaces, std::set<int> colSp
 			std::set<int> affectedSpaces = inRows ? rowSpaces : colSpaces;
 
 			//we can ignore return value, since we know removeCandidates will be successfull
-			boardMap->removeCandidates(candidate, affectedSpaces);
+			boardMap.removeCandidates(candidate, affectedSpaces);
 			step->updateXWing(candidate, row1, row2, col1, col2, inRows ? Set::ROW : Set::COL, affectedSpaces);
 			return true;
 		}

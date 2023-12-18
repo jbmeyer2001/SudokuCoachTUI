@@ -13,10 +13,10 @@ class AlgorithmicSolver
 {
 private:
 	int puzzle[9][9] = { -1 };
-	BoardMap* boardMap;
-	Step* step;
+	int puzzleStart[9][9] = { -1 };
+	BoardMap boardMap;
+	Step *step;
 
-	//check to see if puzzle is solved
 	bool solved(void);
 
 	//check to see if we can identify a sole candidate
@@ -24,7 +24,7 @@ private:
 
 	//check to see if we can identify a unique candidate
 	bool uniqueCandidate(void);
-	bool checkSpaceUniqueCandidate(int space, std::set<int> spaces, int subset, Set s);
+	bool checkSpaceUniqueCandidate(int space, std::set<int> spaces, Set s);
 
 	//check to see if we can identify a block-col/row interaction
 	bool blockColRowInteraction(void);
@@ -49,8 +49,7 @@ public:
 	AlgorithmicSolver(int puzzle[9][9], Step& step);
 
 	void nextStep(void);
-	void solve(void);
-
-	std::set<int> getUnfilled(void) { return this->boardMap->unfilled; }
+	StepID check(void);
+	void printStep(void);
 };
 

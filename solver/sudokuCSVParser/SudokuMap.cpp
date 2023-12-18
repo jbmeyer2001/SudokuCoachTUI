@@ -7,7 +7,7 @@ add a sudoku for every file (which are hopefully .csv files!) in the sudokus fol
 */
 SudokuMap::SudokuMap(void)
 {
-	for (const auto& entry : std::filesystem::directory_iterator("sudokus/"))//TODO maybe edit this to be consistent with other iterators, if it can be done
+	for (const auto& entry : std::filesystem::directory_iterator("sudokus/"))
 	{
 		std::string filename = entry.path().stem().string();
 		Sudoku newSudoku(entry.path());
