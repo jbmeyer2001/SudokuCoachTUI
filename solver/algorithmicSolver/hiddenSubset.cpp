@@ -42,7 +42,7 @@ bool AlgorithmicSolver::hiddenSubset(void)
 				int unused = 0;
 				if (boardMap.removeCandidates(otherCandidates, partition))
 				{
-					step->updateHiddenSubset(i / 9, set, partition, otherCandidates);
+					step->updateHiddenSubset(i / 9, set, otherCandidates, partitionCandidates, partition);
 					return true;
 				}
 			}

@@ -284,13 +284,13 @@ std::string setToString(Set set)
 
 	switch (set) {
 	case Set::ROW:
-		ret = "ROW";
+		ret = "row";
 		break;
 	case Set::COL:
-		ret = "COL";
+		ret = "column";
 		break;
 	case Set::BOX:
-		ret = "BOX";
+		ret = "box";
 		break;
 	default:
 		ret = "NA";
@@ -306,19 +306,19 @@ std::string boxSubsetToString(BoxSubset boxSubset)
 
 	switch (boxSubset) {
 	case BoxSubset::TOP:
-		ret = "TOP";
+		ret = "top";
 		break;
 	case BoxSubset::MIDDLE:
-		ret = "MIDDLE";
+		ret = "middle";
 		break;
 	case BoxSubset::BOTTOM:
-		ret = "BOTTOM";
+		ret = "bottom";
 		break;
 	case BoxSubset::LEFT:
-		ret = "LEFT";
+		ret = "left";
 		break;
 	case BoxSubset::RIGHT:
-		ret = "RIGHT";
+		ret = "right";
 		break;
 	default:
 		ret = "NA";

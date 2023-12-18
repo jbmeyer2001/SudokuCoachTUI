@@ -67,18 +67,33 @@ struct BlockBlock {
 	std::set<int> affectedSpaces;
 };
 
-//TODO: add documentation for what this means in naked/hidden subset
+/*
+rowColBox		- an indication of whether the interaction occured within a row, column, or a box
+rowColBoxNum	- an indication of the row/col/box num in which the interaction occured
+vals			- the val's that were able to removed as candidates from the affected spaces
+affectingSpaces - the spaces that contain all the vals which are causing the interaction
+affectedSpaces	- the spaces who had their candidates removed as a result of the interaction
+*/
 struct NakedSubset {
 	int rowColBoxNum = -1;
-	std::string rowColBox = "";
+	Set rowColBox = Set::NA;
 	std::set<int> vals;
+	std::set<int> affectingSpaces;
 	std::set<int> affectedSpaces;
 };
 
+/*
+rowColBox		- an indication of whether the interaction occured within a row, column, or a box
+rowColBoxNum	- an indication of the row/col/box num in which the interaction occured
+vals			- the val's that were able to removed as candidates from the affected spaces
+affectingSpaces - the spaces that contain all the vals which are causing the interaction
+affectedSpaces	- the spaces who had their candidates removed as a result of the interaction
+*/
 struct HiddenSubset {
 	int rowColBoxNum = -1;
-	std::string rowColBox = "";
-	std::set<int> vals;
+	Set rowColBox = Set::NA;
+	std::set<int> removalVals;
+	std::set<int> subsetVals;
 	std::set<int> affectedSpaces;
 };
 
@@ -117,8 +132,8 @@ private:
 	void updateUniqueCandidate(int row, int col, int val, Set set);
 	void updateBlockRowCol(int val, int boxNum, int rowColNum, Set rowCol, BoxSubset boxSubset, std::set<int> affectedSpaces);
 	void updateBlockBlock(int val, int box1, int box2, int box3, Set rowCol, BoxSubset boxSubset1, BoxSubset boxSubset2, BoxSubset boxSubset3, std::set<int> affectedSpaces);
-	void updateNakedSubset(int rowColBoxNum, Set rowColBox, std::set<int> affectedSpaces, std::set<int> vals);
-	void updateHiddenSubset(int rowColBoxNum, Set rowColBox, std::set<int> affectedSpaces, std::set<int> vals);
+	void updateNakedSubset(int rowColBoxNum, Set rowColBox, std::set<int> vals, std::set<int> affectingSpaces, std::set<int> affectedSpaces);
+	void updateHiddenSubset(int rowColBoxNum, Set rowColBox, std::set<int> removalVals, std::set<int> susbsetVals, std::set<int> affectedSpaces);
 	void updateXWing(int val, int row1, int row2, int col1, int col2, Set rowCol, std::set<int> affectedSpaces);
 
 public:
