@@ -139,7 +139,7 @@ bool BoardMap::removeCandidates(std::set<int> candidates, std::set<int> affected
 	{
 		int val = *candidates.begin();
 		candidates.erase(val);
-		flag = removeCandidates(val, affectedSpaces);
+		flag |= removeCandidates(val, affectedSpaces);
 	}
 
 	return flag;

@@ -7,18 +7,18 @@ bool AlgorithmicSolver::nakedSubset(void)
 
 	for (int i = 0; i < 27; i++)
 	{
-		switch (i % 9)
+		switch (i % 3)
 		{
 		case 0:
-			spaces = boardMap.getUnfilledSpaces(getRow(i / 9));
+			spaces = boardMap.getUnfilledSpaces(getRow(i / 3));
 			set = Set::ROW;
 			break;
 		case 1:
-			spaces = boardMap.getUnfilledSpaces(getCol(i / 9));
+			spaces = boardMap.getUnfilledSpaces(getCol(i / 3));
 			set = Set::COL;
 			break;
 		case 2:
-			spaces = boardMap.getUnfilledSpaces(getBox(i / 9));
+			spaces = boardMap.getUnfilledSpaces(getBox(i / 3));
 			set = Set::BOX;
 			break;
 		}
