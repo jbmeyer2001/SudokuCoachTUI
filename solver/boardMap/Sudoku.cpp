@@ -22,12 +22,10 @@ Sudoku::Sudoku(std::filesystem::path path)
 	std::string line;
 	int i = 0;
 
-	for (int i = 0; i < 9; i++)
-	{
+	for (int i = 0; i < 9; i++) {
 		std::getline(file, line);
 
-		for (int j = 0; j < 9; j++)
-		{
+		for (int j = 0; j < 9; j++) {
    			int val = line.at(j * 2) - '0';
 			puzzle[i][j] = val;
 		}

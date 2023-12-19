@@ -41,7 +41,6 @@ struct BlockRowCol {
 	int boxNum = -1;
 	int rowColNum = -1;
 	Set rowCol = Set::NA;
-	std::set<int> affectedSpaces;
 };
 
 /*
@@ -117,29 +116,6 @@ private:
 	struct HiddenSubset hiddenSubset;
 	struct XWing xWing;
 
-	void clearStep(void);
-	void updateSoleCandidate(int row, int col, int val);
-	void updateUniqueCandidate(int row, int col, int val, Set set);
-	void updateBlockRowCol(int val, int boxNum, int rowColNum, Set rowCol, BoxSubset boxSubset, std::set<int> affectedSpaces);
-	void updateBlockBlock(int val, int affectedBox, int subset1, int subset2, int box1, int box2, Set rowCol);
-	void updateNakedSubset(int rowColBoxNum, Set rowColBox, std::set<int> vals, std::set<int> affectingSpaces, std::set<int> affectedSpaces);
-	void updateHiddenSubset(int rowColBoxNum, Set rowColBox, std::set<int> removalVals, std::set<int> susbsetVals, std::set<int> affectedSpaces);
-	void updateXWing(int val, int row1, int row2, int col1, int col2, Set rowCol, std::set<int> affectedSpaces);
-
-public:
-	//getters
-	StepID getStep(void) { return this->name; }
-	SoleCandidate getSoleCandidate(void) { return soleCandidate; }
-	UniqueCandidate getUniqueCandidate(void) { return uniqueCandidate; }
-	BlockRowCol getBlockRowCol(void) { return blockRowCol; }
-	BlockBlock getBlockBlock(void) { return blockBlock; }
-	NakedSubset getNakedSubset(void) { return nakedSubset; }
-	HiddenSubset getHiddenSubset(void) { return hiddenSubset; }
-	XWing getXWing(void) { return xWing; }
-
-	//prints the step info then the puzzle color coded to the step
-	void printStep(int puzzle[9][9]);
-
 	void printSoleCandidate(int puzzle[9][9]);
 	void printUniqueCandidate(int puzzle[9][9]);
 	void printBlockRowCol(int puzzle[9][9]);
@@ -147,6 +123,19 @@ public:
 	void printNakedSubset(int puzzle[9][9]);
 	void printHiddenSubset(int puzzle[9][9]);
 	void printXWing(int puzzle[9][9]);
+public:
+	void clearStep(void);
+	void updateSoleCandidate(int row, int col, int val);
+	void updateUniqueCandidate(int row, int col, int val, Set set);
+	void updateBlockRowCol(int val, int boxNum, int rowColNum, Set rowCol);
+	void updateBlockBlock(int val, int affectedBox, int subset1, int subset2, int box1, int box2, Set rowCol);
+	void updateNakedSubset(int rowColBoxNum, Set rowColBox, std::set<int> vals, std::set<int> affectingSpaces, std::set<int> affectedSpaces);
+	void updateHiddenSubset(int rowColBoxNum, Set rowColBox, std::set<int> removalVals, std::set<int> susbsetVals, std::set<int> affectedSpaces);
+	void updateXWing(int val, int row1, int row2, int col1, int col2, Set rowCol, std::set<int> affectedSpaces);
+	void solved(void) { this->name = StepID::SOLVED; }
+	void cantSolve(void) { this->name = StepID::CANTSOLVE;  }
+	void unsolveable(void) { this->name = StepID::UNSOLVEABLE; }
 
-	friend class AlgorithmicSolver;
+	StepID getStepID(void) { return this->name; }
+	void printStep(int puzzle[9][9]);
 };

@@ -7,8 +7,7 @@ add a sudoku for every file (which are hopefully .csv files!) in the sudokus fol
 */
 SudokuMap::SudokuMap(void)
 {
-	for (const auto& entry : std::filesystem::directory_iterator("sudokus/"))
-	{
+	for (const auto& entry : std::filesystem::directory_iterator("sudokus/")) {
 		std::string filename = entry.path().stem().string();
 		Sudoku newSudoku(entry.path());
 		sudokus.emplace(filename, newSudoku);
@@ -24,8 +23,9 @@ RETURN: sudokuNode pointer, the address of the puzzle being searched for if foun
 */
 Sudoku* SudokuMap::findPuzzle(std::string name)
 {
-	if (!sudokus.contains(name))
+	if (!sudokus.contains(name)) {
 		return NULL;
+	}
 
 	return &sudokus.find(name)->second;
 }

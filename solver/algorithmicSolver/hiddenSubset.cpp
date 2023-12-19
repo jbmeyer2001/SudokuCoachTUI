@@ -5,10 +5,8 @@ bool AlgorithmicSolver::hiddenSubset(void)
 	Set set;
 	std::set<int> spaces;
 
-	for (int i = 0; i < 27; i++)
-	{
-		switch (i % 9)
-		{
+	for (int i = 0; i < 27; i++) {
+		switch (i % 9) {
 		case 0:
 			spaces = boardMap.getUnfilledSpaces(getRow(i / 9));
 			set = Set::ROW;
@@ -23,26 +21,24 @@ bool AlgorithmicSolver::hiddenSubset(void)
 			break;
 		}
 
-		if (spaces.size() < 4)
+		if (spaces.size() < 4) {
 			continue;
+		}
 
 		unsigned short prev = (unsigned short)2;
 		std::vector<int> spacesVec(spaces.begin(), spaces.end());
 
 		std::set<int> partition = getNextPartition(spacesVec, prev);
-		while (!partition.empty())
-		{
+		while (!partition.empty()) {
 			std::set<int> other = getDifference(spaces, partition);
 
 			std::set<int> partitionCandidates = boardMap.getCandidates(partition);
 			std::set<int> otherCandidates = boardMap.getCandidates(other);
 
-			if (getDifference(partitionCandidates, otherCandidates).size() == partition.size())
-			{
+			if (getDifference(partitionCandidates, otherCandidates).size() == partition.size()) {
 				int unused = 0;
-				if (boardMap.removeCandidates(otherCandidates, partition))
-				{
-					step->updateHiddenSubset(i / 9, set, otherCandidates, partitionCandidates, partition);
+				if (boardMap.removeCandidates(otherCandidates, partition)) {
+					step.updateHiddenSubset(i / 9, set, otherCandidates, partitionCandidates, partition);
 					return true;
 				}
 			}
@@ -64,23 +60,19 @@ getPartition:
 	curInt = (uint16_t)prev + 1;
 	cur = (unsigned short)curInt;
 
-	if (curInt >= pow(2, spaces.size()) - 1)
-	{
+	if (curInt >= pow(2, spaces.size()) - 1) {
 		return retval;
 	}
 
-	for (uint16_t i = 0; i < spaces.size(); i++)
-	{
+	for (uint16_t i = 0; i < spaces.size(); i++) {
 		uint16_t mask = pow(2, i);
 
-		if ((prev & mask) == mask)
-		{
+		if ((prev & mask) == mask) {
 			retval.insert(spaces[i]);
 		}
 	}
 
-	if (retval.size() < 2 || retval.size() > (spaces.size() - 2))
-	{
+	if (retval.size() < 2 || retval.size() > (spaces.size() - 2)) {
 		retval.clear();
 		prev = cur;
 		goto getPartition;

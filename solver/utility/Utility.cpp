@@ -13,10 +13,8 @@
 */
 bool isSolved(int puzzle[9][9])
 {
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
 			if (puzzle[i][j] == 0)
 				return false;
 		}
@@ -33,10 +31,8 @@ bool isSolved(int puzzle[9][9])
 */
 bool duplicates(int array[9])
 {
-	for (int i = 0; i < 8; i++)
-	{
-		for (int j = 8; j > i; j--)
-		{
+	for (int i = 0; i < 8; i++) {
+		for (int j = 8; j > i; j--) {
 			//----------------------------------------------------------------------//
 			//Index i starts at the beginning, and for each iteration of index i,
 			//index j starts at the end and moves towards the beginning until it 
@@ -66,10 +62,8 @@ bool isValid(int puzzle[9][9])
 	int checkArray[9];
 
 	//Check to see if there are any negatives or numbers over 9.
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
 			if ((puzzle[i][j] > 9) || (puzzle[i][j] < 0))
 			{
 				return false;
@@ -78,43 +72,34 @@ bool isValid(int puzzle[9][9])
 	}
 
 	//Check all rows to see if they have duplicates.
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
 			checkArray[j] = puzzle[i][j];
 		}
-		if (duplicates(checkArray))
-		{
+		if (duplicates(checkArray)) {
 			return false;
 		}
 	}
 
 	//Check all columns to see if they have duplicates.
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
 			checkArray[j] = puzzle[j][i];
 		}
-		if (duplicates(checkArray))
-		{
+		if (duplicates(checkArray)) {
 			return false;
 		}
 	}
 
 	//Check all boxes to see if they have duplicates.
-	for (int i = 0; i <= 6; i = i + 3)
-	{
-		for (int j = 0; j <= 6; j = j + 3)
-		{
+	for (int i = 0; i <= 6; i = i + 3) {
+		for (int j = 0; j <= 6; j = j + 3) {
 			//---------------------------------------------------------------------------------//
 			//Variables i and j determine which box is being checked for duplicates by selecting
 			//the first index of each box within the sudoku array. (0,0) for box one, (0,3)
 			//for box two, (0,6) for box 3, (3,0) for box four, etc.
 			//---------------------------------------------------------------------------------//
-			for (int k = 0; k < 3; k++)
-			{
+			for (int k = 0; k < 3; k++) {
 				for (int l = 0; l < 3; l++) {
 					//-------------------------------------------------------------------------------------------------------------------------//
 					//Variables k and l determine the indices within each box, and therefore, the values copied into checkArray[9] to be checked.
@@ -124,8 +109,7 @@ bool isValid(int puzzle[9][9])
 					checkArray[(k * 3) + l] = puzzle[k + i][l + j];
 				}
 			}
-			if (duplicates(checkArray))
-			{
+			if (duplicates(checkArray)) {
 				return false;
 			}
 		}
@@ -142,10 +126,8 @@ bool isValid(int puzzle[9][9])
 */
 void printPuzzle(int puzzle[9][9])
 {
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
 			std::cout << puzzle[i][j] << " ";
 		}
 		std::cout << std::endl;
@@ -163,8 +145,7 @@ void printPuzzle(int puzzle[9][9])
 int nextRow(int row_num, int column_num)
 {
 	//Row should increase only if the current function call is on the last column.
-	if (column_num == 8)
-	{
+	if (column_num == 8) {
 		row_num++;
 		return row_num;
 	}
@@ -183,12 +164,10 @@ int nextColumn(int row_num, int column_num)
 {
 	//If the current function call is on the last column, reset to the first column (of the next row).
 	//Increment the column in every other case to continue traversing a row.
-	if (column_num == 8)
-	{
+	if (column_num == 8) {
 		return  0;
 	}
-	else
-	{
+	else {
 		column_num++;
 		return column_num;
 	}
@@ -196,10 +175,8 @@ int nextColumn(int row_num, int column_num)
 
 void copyPuzzle(int src[9][9], int dest[9][9])
 {
-	for(int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
+	for(int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
 			dest[i][j] = src[i][j];
 		}
 	}
@@ -210,8 +187,7 @@ std::set<int> getRow(int row)
 {
 	std::set<int> indexes;
 
-	for (int i = 0; i < 9; i++)
-	{
+	for (int i = 0; i < 9; i++) {
 		indexes.insert(i + row * 9);
 	}
 
@@ -223,8 +199,7 @@ std::set<int> getCol(int col)
 {
 	std::set<int> indexes;
 
-	for (int i = 0; i < 9; i++)
-	{
+	for (int i = 0; i < 9; i++) {
 		indexes.insert(i * 9 + col);
 	}
 
@@ -236,8 +211,7 @@ std::set<int> getBox(int box)
 {
 	std::set<int> indexes;
 
-	for (int i = 0; i < 9; i++)
-	{
+	for (int i = 0; i < 9; i++) {
 		indexes.insert((i / 3) * 9 + (i % 3) + (box / 3) * 27 + (box % 3) * 3);
 	}
 
@@ -295,33 +269,6 @@ std::string setToString(Set set)
 	default:
 		ret = "NA";
 		break;
-	}
-
-	return ret;
-}
-
-std::string boxSubsetToString(BoxSubset boxSubset)
-{
-	std::string ret;
-
-	switch (boxSubset) {
-	case BoxSubset::TOP:
-		ret = "top";
-		break;
-	case BoxSubset::MIDDLE:
-		ret = "middle";
-		break;
-	case BoxSubset::BOTTOM:
-		ret = "bottom";
-		break;
-	case BoxSubset::LEFT:
-		ret = "left";
-		break;
-	case BoxSubset::RIGHT:
-		ret = "right";
-		break;
-	default:
-		ret = "NA";
 	}
 
 	return ret;

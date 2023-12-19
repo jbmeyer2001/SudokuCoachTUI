@@ -1,9 +1,8 @@
 #include "AlgorithmicSolver.h"
 
-bool AlgorithmicSolver::blockColRowInteraction(void)
+bool AlgorithmicSolver::blockRowColInteraction(void)
 {
-	for (int box = 0; box < 9; box++) //for each block
-	{
+	for (int box = 0; box < 9; box++) { //for each block
 		int startIndex = (box / 3) * 27 + (box % 3) * 3;
 		int row = startIndex / 9;
 		int col = startIndex % 9;
@@ -53,52 +52,47 @@ bool AlgorithmicSolver::blockColRowInteraction(void)
 		affectedSpaces = getDifference(getRow(row), getBox(box));
 		int val;
 
-		if (boardMap.removeCandidates(onlyRowOneComm, affectedSpaces, val))
-		{
-			step->updateBlockRowCol(val, box, row, Set::ROW, BoxSubset::MIDDLE, affectedSpaces);
+		if (boardMap.removeCandidates(onlyRowOneComm, affectedSpaces, val)) {
+			step.updateBlockRowCol(val, box, row, Set::ROW);
 			return true;
 		}
 
 		//see if there is a block to col/row interaction on the middle row of the box, record the step and return true if there is
 		affectedSpaces = getDifference(getRow(row + 1), getBox(box));
-		if (boardMap.removeCandidates(onlyRowTwoComm, affectedSpaces, val))
-		{
-			step->updateBlockRowCol(val, box, row + 1, Set::ROW, BoxSubset::MIDDLE, affectedSpaces);
+		if (boardMap.removeCandidates(onlyRowTwoComm, affectedSpaces, val)) {
+			step.updateBlockRowCol(val, box, row + 1, Set::ROW);
 			return true;
 		}
 
 		//see if there is a block to col/row interaction on the bottom row of the box, record the step and return true if there is
 		affectedSpaces = getDifference(getRow(row + 2), getBox(box));
-		if (boardMap.removeCandidates(onlyRowThreeComm, affectedSpaces, val))
-		{
-			step->updateBlockRowCol(val, box, row + 2, Set::ROW, BoxSubset::BOTTOM, affectedSpaces);
+		if (boardMap.removeCandidates(onlyRowThreeComm, affectedSpaces, val)) {
+			step.updateBlockRowCol(val, box, row + 2, Set::ROW);
 			return true;
 		}
 
 		//see if there is a block to col/row interaction on the left column of the box, record the step and return true if there is
 		affectedSpaces = getDifference(getCol(col), getBox(box));
-		if (boardMap.removeCandidates(onlyColOneComm, affectedSpaces, val))
-		{
-			step->updateBlockRowCol(val, box, col, Set::COL, BoxSubset::RIGHT, affectedSpaces);
+		if (boardMap.removeCandidates(onlyColOneComm, affectedSpaces, val)) {
+			step.updateBlockRowCol(val, box, col, Set::COL);
 			return true;
 		}
 
 		//see if there is a block to col/row interaction on the middle column of the box, record the step and return true if there is
 		affectedSpaces = getDifference(getCol(col + 1), getBox(box));
-		if (boardMap.removeCandidates(onlyColTwoComm, affectedSpaces, val))
-		{
-			step->updateBlockRowCol(val, box, col + 1, Set::COL, BoxSubset::RIGHT, affectedSpaces);
+		if (boardMap.removeCandidates(onlyColTwoComm, affectedSpaces, val)) {
+			step.updateBlockRowCol(val, box, col + 1, Set::COL);
 			return true;
 
 		}
 
 		//see if there is a block to col/row interaction on the right column of the box, record the step and return true if there is
 		affectedSpaces = getDifference(getCol(col + 2), getBox(box));
-		if (boardMap.removeCandidates(onlyColThreeComm, affectedSpaces, val))
-		{
-			step->updateBlockRowCol(val, box, col + 2, Set::COL, BoxSubset::RIGHT, affectedSpaces);
+		if (boardMap.removeCandidates(onlyColThreeComm, affectedSpaces, val)) {
+			step.updateBlockRowCol(val, box, col + 2, Set::COL);
 			return true;
 		}
 	}
+
 	return false;
 }

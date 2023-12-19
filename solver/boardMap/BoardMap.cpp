@@ -4,8 +4,7 @@
 void BoardMap::init(int puzzle[9][9])
 {
 	unfilled.clear();
-	for (int i = 0; i < 81; i++)
-	{
+	for (int i = 0; i < 81; i++) {
 		spaceCandidates[i].clear();
 	}
 
@@ -13,28 +12,24 @@ void BoardMap::init(int puzzle[9][9])
 	std::set<int> cols[9];
 	std::set<int> boxes[9];
 
-	for (int i = 0; i < 81; i++)
-	{
+	for (int i = 0; i < 81; i++) {
 		int row = i / 9;
 		int col = i % 9;
 		int box = (i / 27) * 3 + (i % 9) / 3;
 		int val = puzzle[row][col];
 
-		if (val != -1 && val != 0)
-		{
+		if (val != -1 && val != 0) {
 			rows[row].insert(val);
 			cols[col].insert(val);
 			boxes[box].insert(val);
 		}
-		else
-		{
+		else {
 			unfilled.insert(i);
 		}
 	}
 
 	std::set<int>::iterator it1;
-	for (it1 = unfilled.begin(); it1 != unfilled.end(); it1++)
-	{
+	for (it1 = unfilled.begin(); it1 != unfilled.end(); it1++) {
 		int spaceNum = *it1;
 		int row = spaceNum / 9;
 		int col = spaceNum % 9;
@@ -43,16 +38,13 @@ void BoardMap::init(int puzzle[9][9])
 		std::set<int> all = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 		std::set<int>::iterator it2;
-		for (it2 = rows[row].begin(); it2 != rows[row].end(); it2++)
-		{
+		for (it2 = rows[row].begin(); it2 != rows[row].end(); it2++) {
 			all.erase(*it2);
 		}
-		for (it2 = cols[col].begin(); it2 != cols[col].end(); it2++)
-		{
+		for (it2 = cols[col].begin(); it2 != cols[col].end(); it2++) {
 			all.erase(*it2);
 		}
-		for (it2 = boxes[box].begin(); it2 != boxes[box].end(); it2++)
-		{
+		for (it2 = boxes[box].begin(); it2 != boxes[box].end(); it2++) {
 			all.erase(*it2);
 		}
 
@@ -72,10 +64,8 @@ void BoardMap::insert(int spaceNum, int val)
 	std::set<int> affectedSpaces = getUnion(getRow(row), getCol(col), getBox(box));
 
 	std::set<int>::iterator it;
-	for (it = affectedSpaces.begin(); it != affectedSpaces.end(); it++)
-	{
-		if (unfilled.find(*it) != unfilled.end())
-		{
+	for (it = affectedSpaces.begin(); it != affectedSpaces.end(); it++) {
+		if (unfilled.find(*it) != unfilled.end()) {
 			spaceCandidates[*it].erase(val);
 		}
 	}
@@ -86,12 +76,10 @@ std::set<int> BoardMap::getCandidates(std::set<int> spaces)
 	std::set<int> retval;
 	std::set<int>::iterator it;
 
-	for (it = spaces.begin(); it != spaces.end(); it++)
-	{
+	for (it = spaces.begin(); it != spaces.end(); it++) {
 		std::set<int> candidates = getCandidates(*it);
 
-		if (!candidates.empty())
-		{
+		if (!candidates.empty()) {
 			retval.insert(candidates.begin(), candidates.end());
 		}
 	}
@@ -103,8 +91,7 @@ std::set<int> BoardMap::getCandidates(int space)
 {
 	std::set<int> retval;
 	
-	if (unfilled.contains(space))
-	{
+	if (unfilled.contains(space)) {
 		retval.insert(spaceCandidates[space].begin(), spaceCandidates[space].end());
 	}
 
@@ -115,14 +102,12 @@ std::set<int> BoardMap::getCandidates(int space)
 bool BoardMap::removeCandidates(std::set<int> candidates, std::set<int> affectedSpaces, int &value)
 {
 	bool flag = false;
-	while (!candidates.empty())
-	{
+	while (!candidates.empty()) {
 		int val = *candidates.begin();
 		candidates.erase(val);
 		flag = removeCandidates(val, affectedSpaces);
 
-		if (flag)
-		{
+		if (flag) {
 			value = val;
 			break;
 		}
@@ -135,8 +120,7 @@ bool BoardMap::removeCandidates(std::set<int> candidates, std::set<int> affected
 bool BoardMap::removeCandidates(std::set<int> candidates, std::set<int> affectedSpaces)
 {
 	bool flag = false;
-	while (!candidates.empty())
-	{
+	while (!candidates.empty()) {
 		int val = *candidates.begin();
 		candidates.erase(val);
 		flag |= removeCandidates(val, affectedSpaces);
@@ -149,12 +133,10 @@ bool BoardMap::removeCandidates(int candidate, std::set<int> affectedSpaces)
 {
 	bool flag = false;
 	std::set<int>::iterator it;
-	for (it = affectedSpaces.begin(); it != affectedSpaces.end(); it++)
-	{
+	for (it = affectedSpaces.begin(); it != affectedSpaces.end(); it++) {
 		//the space is unfilled, and one of the affected spaces contains a value that needs to be removed
 		//because of the block to row/col interaction
-		if (unfilled.contains(*it) && spaceCandidates[*it].contains(candidate))
-		{
+		if (unfilled.contains(*it) && spaceCandidates[*it].contains(candidate)) {
 			spaceCandidates[*it].erase(candidate);
 			flag = true;
 		}
@@ -168,12 +150,10 @@ std::set<int> BoardMap::getUnfilledSpaces(std::set<int> spaces)
 	std::set<int> retval;
 
 	std::set<int>::iterator it;
-	for (it = spaces.begin(); it != spaces.end(); it++)
-	{
+	for (it = spaces.begin(); it != spaces.end(); it++) {
 		int space = *it;
 
-		if (unfilled.contains(space))
-		{
+		if (unfilled.contains(space)) {
 			retval.emplace(space);
 		}
 	}

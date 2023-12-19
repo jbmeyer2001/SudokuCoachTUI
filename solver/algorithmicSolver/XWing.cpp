@@ -4,16 +4,15 @@
 bool AlgorithmicSolver::XWing(void)
 {
 	//Step 1: select two rows and two columns, such that none of their (four) intersection points share a box
-	for (int row1 = 0; row1 <= 5; row1++)
-	{
+	for (int row1 = 0; row1 <= 5; row1++) {
+
 		int row2Start = ((row1 / 3) * 3) + 3;
-		for (int row2 = row2Start; row2 <= 8; row2++)
-		{
-			for (int col1 = 0; col1 <= 5; col1++)
-			{
+		for (int row2 = row2Start; row2 <= 8; row2++) {
+
+			for (int col1 = 0; col1 <= 5; col1++) {
+
 				int col2Start = ((col1 / 3) * 3) + 3;
-				for (int col2 = col2Start; col2 <= 8; col2++)
-				{
+				for (int col2 = col2Start; col2 <= 8; col2++) {
 					/*
 					There are now three sets that may be defined:
 						- the set of the intersections of rows and columns (4 spaces)
@@ -36,8 +35,7 @@ bool AlgorithmicSolver::XWing(void)
 					rowSpaces = getDifference(rowSpaces, intSpaces);
 					colSpaces = getDifference(colSpaces, intSpaces);
 
-					if (XWingHelper(rowSpaces, colSpaces, intSpaces, row1, row2, col1, col2))
-					{
+					if (XWingHelper(rowSpaces, colSpaces, intSpaces, row1, row2, col1, col2)) {
 						return true;
 					}
 				}
@@ -65,19 +63,17 @@ bool AlgorithmicSolver::XWingHelper(std::set<int> rowSpaces, std::set<int> colSp
 		boardMap.getCandidates(intSpacesVec[3]));
 
 	std::set<int>::iterator it;
-	for (it = intCandidates.begin(); it != intCandidates.end(); it++)
-	{
+	for (it = intCandidates.begin(); it != intCandidates.end(); it++) {
 		int candidate = *it;
 		bool inRows = (rowCandidates.contains(candidate));
 		bool inCols = (colCandidates.contains(candidate));
 
-		if (inRows ^ inCols)
-		{
+		if (inRows ^ inCols) {
 			std::set<int> affectedSpaces = inRows ? rowSpaces : colSpaces;
 
 			//we can ignore return value, since we know removeCandidates will be successfull
 			boardMap.removeCandidates(candidate, affectedSpaces);
-			step->updateXWing(candidate, row1, row2, col1, col2, inRows ? Set::ROW : Set::COL, affectedSpaces);
+			step.updateXWing(candidate, row1, row2, col1, col2, inRows ? Set::ROW : Set::COL, affectedSpaces);
 			return true;
 		}
 	}

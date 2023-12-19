@@ -14,8 +14,12 @@ class AlgorithmicSolver
 private:
 	int puzzle[9][9] = { -1 };
 	int puzzleStart[9][9] = { -1 };
+
+	//I am chosing not to use inheritance here because it doesn't
+	//make sense for boardMap or step to be either a child/parent of AlgorithmicSolver
+	//
 	BoardMap boardMap;
-	Step *step;
+	Step step;
 
 	bool solved(void);
 
@@ -27,7 +31,7 @@ private:
 	bool checkSpaceUniqueCandidate(int space, std::set<int> spaces, Set s);
 
 	//check to see if we can identify a block-col/row interaction
-	bool blockColRowInteraction(void);
+	bool blockRowColInteraction(void);
 
 	//check to see if we can identify a block-bock
 	bool blockBlockInteraction(void);

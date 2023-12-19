@@ -5,10 +5,8 @@ bool AlgorithmicSolver::nakedSubset(void)
 	Set set;
 	std::set<int> spaces;
 
-	for (int i = 0; i < 27; i++)
-	{
-		switch (i % 3)
-		{
+	for (int i = 0; i < 27; i++) {
+		switch (i % 3) {
 		case 0:
 			spaces = boardMap.getUnfilledSpaces(getRow(i / 3));
 			set = Set::ROW;
@@ -23,21 +21,20 @@ bool AlgorithmicSolver::nakedSubset(void)
 			break;
 		}
 
-		if (spaces.size() < 4) //TODO: explain this
+		if (spaces.size() < 4) {//TODO: explain this
 			continue;
+		}
 
 		std::set<int>::iterator it1;
 
-		for (it1 = spaces.begin(); it1 != spaces.end(); it1++)
-		{
+		for (it1 = spaces.begin(); it1 != spaces.end(); it1++) {
 			std::set<int> candidates1 = boardMap.spaceCandidates[*it1];
 			std::set<int> equivSpaces;
 			equivSpaces.insert(*it1);
 
 			std::set<int>::iterator it2 = it1;
 			std::advance(it2, 1);
-			for (it2; it2 != spaces.end(); it2++)
-			{
+			for (it2; it2 != spaces.end(); it2++) {
 				std::set<int> candidates2 = boardMap.spaceCandidates[*it2];
 
 				if (candidates1 == candidates2)
@@ -46,12 +43,10 @@ bool AlgorithmicSolver::nakedSubset(void)
 				}
 			}
 
-			if (equivSpaces.size() == candidates1.size()) //TODO think about moving this to teh above for loop
-			{
+			if (equivSpaces.size() == candidates1.size()) {//TODO think about moving this to teh above for loop {
 				std::set<int> affectedSpaces = getDifference(spaces, equivSpaces);
-				if (boardMap.removeCandidates(candidates1, affectedSpaces))
-				{
-					step->updateNakedSubset(i / 9, set, candidates1, equivSpaces, affectedSpaces);
+				if (boardMap.removeCandidates(candidates1, affectedSpaces)) {
+					step.updateNakedSubset(i / 9, set, candidates1, equivSpaces, affectedSpaces);
 					return true;
 				}
 			}

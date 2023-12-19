@@ -12,7 +12,7 @@ int main(void)
 {
 	/*
 	SudokuMap sudokus;
-	Sudoku* sudoku = sudokus.findPuzzle("XWingTest");
+	Sudoku* sudoku = sudokus.findPuzzle("NYTHardOld1");
 	
 	if (sudoku == NULL)
 		return 0;
@@ -22,10 +22,14 @@ int main(void)
 
 	Step step;
 	AlgorithmicSolver solver(puzzle, step);
-	solver.solve();
+	//solver.solve();
+
+	while (step.getStepID()() != StepID::SOLVED && step.getStepID()() != StepID::CANTSOLVE && step.getStepID()() != StepID::UNSOLVEABLE) {
+		solver.nextStep();
+	}
 	*/
 
-	//throw and catch an error here
+	//TODO throw and catch an error here
 	SudokuMap sudokus;
 	TUILoop(sudokus);
 	return 0;
@@ -47,13 +51,13 @@ void TUILoop(SudokuMap sudokus)
 	AlgorithmicSolver solver(puzzle, step);
 
 	StepID id = solver.check();
-	switch (id)
-	{
+	switch (id) {
 	case StepID::SOLVED:
 		break;
 	case StepID::CANTSOLVE:
-		std::cout << "this solver is incapable of solving this puzzle, although it is a valid puzzle with one solution." << std::endl;
-		goto exit;
+		//std::cout << "this solver is incapable of solving this puzzle, although it is a valid puzzle with one solution." << std::endl;
+		//goto exit;
+		id = StepID::SOLVED; //for now, to test block block printing
 		break;
 	case StepID::UNSOLVEABLE:
 		std::cout << "this puzzle is not solveable." << std::endl;
@@ -66,7 +70,7 @@ void TUILoop(SudokuMap sudokus)
 
 	std::cin.ignore();
 
-	while (step.getStep() != StepID::SOLVED) {
+	while (step.getStepID() != StepID::SOLVED) {
 		solver.nextStep();
 		solver.printStep();
 		std::cin.ignore();

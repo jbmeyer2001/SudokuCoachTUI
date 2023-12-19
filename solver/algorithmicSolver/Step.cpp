@@ -25,14 +25,13 @@ void Step::updateUniqueCandidate(int row, int col, int val, Set set)
 	this->uniqueCandidate.rowColBox = set;
 }
 
-void Step::updateBlockRowCol(int val, int boxNum, int rowColNum, Set rowCol, BoxSubset boxSubset, std::set<int> affectedSpaces)
+void Step::updateBlockRowCol(int val, int boxNum, int rowColNum, Set rowCol)
 {
 	this->name = StepID::BLOCKROWCOL;
 	this->blockRowCol.val = val;
 	this->blockRowCol.boxNum = boxNum;
 	this->blockRowCol.rowColNum = rowColNum;
 	this->blockRowCol.rowCol = rowCol;
-	this->blockRowCol.affectedSpaces = affectedSpaces;
 }
 
 void Step::updateBlockBlock(int val, int affectedBox, int subset1, int subset2, int box1, int box2, Set rowCol)
@@ -85,7 +84,8 @@ static void setColor(Color color)
 	SetConsoleTextAttribute(console, (int)color);
 }
 
-void Step::printSoleCandidate(int puzzle[9][9]) {
+void Step::printSoleCandidate(int puzzle[9][9]) 
+{
 	SoleCandidate cur = this->soleCandidate;
 
 	setColor(WHITE);
@@ -95,10 +95,8 @@ void Step::printSoleCandidate(int puzzle[9][9]) {
 		cur.col + 1);
 
 	setColor(BLUE);
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
 			if (i == cur.row && j == cur.col)
 			{
 				setColor(MAGENTA);
@@ -115,13 +113,13 @@ void Step::printSoleCandidate(int puzzle[9][9]) {
 
 }
 
-void Step::printUniqueCandidate(int puzzle[9][9]) {
+void Step::printUniqueCandidate(int puzzle[9][9]) 
+{
 	UniqueCandidate cur = this->uniqueCandidate;
 
 	std::set<int> highlightSubset;
 	int subset = 0;
-	switch (cur.rowColBox)
-	{
+	switch (cur.rowColBox) {
 	case Set::ROW:
 		subset = cur.row;
 		highlightSubset = getRow(subset);
@@ -149,10 +147,8 @@ void Step::printUniqueCandidate(int puzzle[9][9]) {
 		subset + 1,
 		cur.val);
 
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{ 
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) { 
 			if (i == cur.row && j == cur.col) { 
 				setColor(MAGENTA); //if it's the val set to red
 			} 
@@ -169,7 +165,8 @@ void Step::printUniqueCandidate(int puzzle[9][9]) {
 	}
 }
 
-void Step::printBlockRowCol(int puzzle[9][9]) {
+void Step::printBlockRowCol(int puzzle[9][9]) 
+{
 	BlockRowCol cur = this->blockRowCol;
 
 	//the subset of all the spaces in either the row or the column specified by cur.rowColNum
@@ -191,14 +188,12 @@ void Step::printBlockRowCol(int puzzle[9][9]) {
 		setToString(cur.rowCol).c_str(),
 		cur.rowColNum + 1);
 	
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
 			if (boxSubset.contains(i * 9 + j)) {
 				setColor(YELLOW);
 			}
-			else if (cur.affectedSpaces.contains(i * 9 + j)) {
+			else if (removeSubset.contains(i * 9 + j)) {
 				setColor(RED);
 			}
 			else {
@@ -211,7 +206,8 @@ void Step::printBlockRowCol(int puzzle[9][9]) {
 	}
 }
 
-void Step::printBlockBlock(int puzzle[9][9]) {
+void Step::printBlockBlock(int puzzle[9][9]) 
+{
 	BlockBlock cur = this->blockBlock;
 
 	//the spaces within either the rows or columns in which the interaction occured
@@ -246,10 +242,8 @@ void Step::printBlockBlock(int puzzle[9][9]) {
 		cur.affectingSubset1 + 1,
 		cur.affectingSubset2 + 1);
 
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
 			if (affectedSpaces.contains(i * 9 + j)) {
 				setColor(RED);
 			}
@@ -266,7 +260,8 @@ void Step::printBlockBlock(int puzzle[9][9]) {
 	}
 }
 
-void Step::printNakedSubset(int puzzle[9][9]) {
+void Step::printNakedSubset(int puzzle[9][9]) 
+{
 	NakedSubset cur = this->nakedSubset;
 	std::string vals;
 	std::string affectingSpaces;
@@ -331,10 +326,8 @@ void Step::printNakedSubset(int puzzle[9][9]) {
 		cur.rowColBoxNum + 1,
 		affectedSpaces.c_str());
 	
-	for (int i = 0; i < 9; i++) 
-	{
-		for (int j = 0; j < 9; j++)
-		{
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
 			if (cur.affectingSpaces.contains(i * 9 + j)) {
 				setColor(YELLOW);
 			}
@@ -351,7 +344,8 @@ void Step::printNakedSubset(int puzzle[9][9]) {
 	}
 }
 
-void Step::printHiddenSubset(int puzzle[9][9]) {
+void Step::printHiddenSubset(int puzzle[9][9]) 
+{
 	HiddenSubset cur = this->hiddenSubset;
 	std::string removalVals;
 	std::string subsetVals;
@@ -411,14 +405,12 @@ void Step::printHiddenSubset(int puzzle[9][9]) {
 		removalVals.c_str(),
 		affectedSpaces.c_str());
 
-	for (int i = 0; i < 9; i++) 
-	{
-		for (int j = 0; j < 9; j++)
-		{
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
 			if (cur.affectedSpaces.contains(i * 9 + j)) {
 				setColor(RED);
 			}
-			else{
+			else {
 				setColor(BLUE);
 			}
 
@@ -428,7 +420,8 @@ void Step::printHiddenSubset(int puzzle[9][9]) {
 	}
 }
 
-void Step::printXWing(int puzzle[9][9]) {
+void Step::printXWing(int puzzle[9][9]) 
+{
 	XWing cur = this->xWing;
 
 	//the set that contains the candidates to be removed
@@ -468,12 +461,9 @@ void Step::printXWing(int puzzle[9][9]) {
 		subset1 + 1,
 		subset2 + 1);
 	
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
-			if (intersections.contains(i * 9 + j))
-			{
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
+			if (intersections.contains(i * 9 + j)) {
 				setColor(GREEN);
 			} 
 			else if (cur.affectedSpaces.contains(i * 9 + j)) {
@@ -495,7 +485,6 @@ void Step::printXWing(int puzzle[9][9]) {
 void Step::printStep(int puzzle[9][9])
 {
 	switch (name) {
-
 	case StepID::SOLECANDIDATE:
 		printSoleCandidate(puzzle);
 		break;

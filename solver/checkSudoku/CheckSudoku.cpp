@@ -1,8 +1,7 @@
 #include "CheckSudoku.h"
 #include "utility.h"
 
-bool checkSudoku(int puzzle[9][9])
-{
+bool checkSudoku(int puzzle[9][9]) {
 	//check if the sudoku is solveable, and has only a single solution
 	//(a sudoku with more than one solution is not valid)
 	int solutions = 0;
@@ -10,8 +9,7 @@ bool checkSudoku(int puzzle[9][9])
 	return (solutions == 1);
 }
 
-void solveRecursive(int puzzle[9][9], int rowNum, int colNum, int& solutions)
-{
+void solveRecursive(int puzzle[9][9], int rowNum, int colNum, int& solutions) {
 	int nextRow = (colNum == 8) ? rowNum + 1 : rowNum;
 	int nextCol = (colNum == 8) ? 0 : colNum + 1;
 
