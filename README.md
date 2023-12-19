@@ -1,0 +1,2 @@
+ - A sudoku solver that solves sudoku puzzles by looking for the same patterns that a human would.
+ - working on a terminal user interface (for windows) to walk through the steps taken to solve any given puzzle.
