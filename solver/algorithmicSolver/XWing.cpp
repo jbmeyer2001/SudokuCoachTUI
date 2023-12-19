@@ -31,7 +31,7 @@ bool AlgorithmicSolver::XWing(void)
 					//intersections set
 					std::set<int> intSpaces = getIntersection(rowSpaces, colSpaces);
 
-					//remove 
+					//remove intersections from row and column sets
 					rowSpaces = getDifference(rowSpaces, intSpaces);
 					colSpaces = getDifference(colSpaces, intSpaces);
 

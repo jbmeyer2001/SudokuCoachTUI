@@ -105,6 +105,14 @@ struct XWing {
 	std::set<int> affectedSpaces;
 };
 
+struct YWing {
+	int candidate = -1;
+	int base = -1;
+	int wing1 = -1;
+	int wing2 = -1;
+	std::set<int> affectedSpaces;
+};
+
 class Step {
 private:
 	StepID name;
@@ -115,6 +123,7 @@ private:
 	struct NakedSubset nakedSubset;
 	struct HiddenSubset hiddenSubset;
 	struct XWing xWing;
+	struct YWing yWing;
 
 	void printSoleCandidate(int puzzle[9][9]);
 	void printUniqueCandidate(int puzzle[9][9]);
@@ -123,6 +132,8 @@ private:
 	void printNakedSubset(int puzzle[9][9]);
 	void printHiddenSubset(int puzzle[9][9]);
 	void printXWing(int puzzle[9][9]);
+	void printYWing(int puzzle[9][9]);
+
 public:
 	void clearStep(void);
 	void updateSoleCandidate(int row, int col, int val);
@@ -132,6 +143,7 @@ public:
 	void updateNakedSubset(int rowColBoxNum, Set rowColBox, std::set<int> vals, std::set<int> affectingSpaces, std::set<int> affectedSpaces);
 	void updateHiddenSubset(int rowColBoxNum, Set rowColBox, std::set<int> removalVals, std::set<int> susbsetVals, std::set<int> affectedSpaces);
 	void updateXWing(int val, int row1, int row2, int col1, int col2, Set rowCol, std::set<int> affectedSpaces);
+	void updateYWing(int candidate, int base, int wing1, int wing2, std::set<int> affectedSpaces);
 	void solved(void) { this->name = StepID::SOLVED; }
 	void cantSolve(void) { this->name = StepID::CANTSOLVE;  }
 	void unsolveable(void) { this->name = StepID::UNSOLVEABLE; }

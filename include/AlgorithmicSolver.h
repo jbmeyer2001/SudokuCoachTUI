@@ -47,6 +47,10 @@ private:
 	bool XWing(void);
 	bool XWingHelper(std::set<int> rowSpaces, std::set<int> colSpaces, std::set<int> intSpaces, int row1, int row2, int col1, int col2);
 
+	//check to see if we can identify a xywing
+	bool YWing(void);
+	bool YWingHelper(int cur, int space1, int space2);
+
 	void checkIfSolveable(void);
 
 public:

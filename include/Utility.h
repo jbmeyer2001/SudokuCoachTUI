@@ -24,6 +24,7 @@ enum class StepID
 	NAKEDSUBSET = 7,
 	HIDDENSUBSET = 8,
 	XWING = 9,
+	YWING = 10
 };
 
 //used to specify output color of console text

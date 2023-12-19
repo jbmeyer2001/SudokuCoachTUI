@@ -78,6 +78,16 @@ void Step::updateXWing(int val, int row1, int row2, int col1, int col2, Set rowC
 	this->xWing.affectedSpaces = affectedSpaces;
 }
 
+void Step::updateYWing(int candidate, int base, int wing1, int wing2, std::set<int> affectedSpaces) 
+{
+	this->name = StepID::YWING;
+	this->yWing.candidate = candidate;
+	this->yWing.base = base;
+	this->yWing.wing1 = wing1;
+	this->yWing.wing2 = wing2;
+	this->yWing.affectedSpaces = affectedSpaces;
+}
+
 static void setColor(Color color)
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -443,7 +453,7 @@ void Step::printXWing(int puzzle[9][9])
 	std::set<int> intersections = getIntersection(rowSpaces, colSpaces);
 
 	setColor(WHITE);
-	printf("STEP: x wing\nconsider the rows %d and %d, and the columns %d and %d.\nWithin those %ss the only spaces that contain the candidate %d are also within those %ss.\nTherefore, the occurences of %d in the final solution must be at\nthe intersection of the rows: %d, %d and the columns:%d, %d.\nbecause of this, we may remove %d as a candidate from all spaces in the %ss %d and %d that aren't at those intersections.\n",
+	printf("STEP:x-wing\nconsider the rows %d and %d, and the columns %d and %d.\nWithin those %ss the only spaces that contain the candidate %d are also within those %ss.\nTherefore, the occurences of %d in the final solution must be at\nthe intersection of the rows: %d, %d and the columns:%d, %d.\nbecause of this, we may remove %d as a candidate from all spaces in the %ss %d and %d that aren't at those intersections.\n",
 		cur.row1 + 1,
 		cur.row2 + 1,
 		cur.col1 + 1,
@@ -482,6 +492,46 @@ void Step::printXWing(int puzzle[9][9])
 	}
 }
 
+void Step::printYWing(int puzzle[9][9]) 
+{
+	YWing cur = this->yWing;
+
+	int baseRow = cur.base / 9;
+	int baseCol = cur.base % 9;
+	int wing1Row = cur.wing1 / 9;
+	int wing1Col = cur.wing1 % 9;
+	int wing2Row = cur.wing2 / 9;
+	int wing2Col = cur.wing2 % 9;
+
+	setColor(WHITE);
+	printf("STEP:y-wing\nThe space at (row %d, column %d) is the base of a y-wing where the wings are (row %d, column %d) and (row %d, column %d).\nBecause of it, we were able to remove %d as a candidate from the intersection of the row/column/boxes that each wing is a part of.\n",
+		baseRow + 1,
+		baseCol + 1,
+		wing1Row + 1,
+		wing1Col + 1,
+		wing2Row + 1,
+		wing2Col + 1,
+		cur.candidate);
+
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
+			int space = i * 9 + j;
+			if (space == cur.base || space == cur.wing1 || space == cur.wing2) {
+				setColor(GREEN);
+			}
+			else if (cur.affectedSpaces.contains(space)) {
+				setColor(RED);
+			}
+			else {
+				setColor(BLUE);
+			}
+
+			std::cout << puzzle[i][j] << " ";
+		}
+		std::cout << std::endl;
+	}
+}
+
 void Step::printStep(int puzzle[9][9])
 {
 	switch (name) {
@@ -505,6 +555,9 @@ void Step::printStep(int puzzle[9][9])
 		break;
 	case StepID::XWING:
 		printXWing(puzzle);
+		break;
+	case StepID::YWING:
+		printYWing(puzzle);
 		break;
 	}
 }

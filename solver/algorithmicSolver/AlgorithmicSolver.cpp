@@ -30,6 +30,7 @@ void AlgorithmicSolver::nextStep(void)
 	if (nakedSubset()) { return; }
 	if (hiddenSubset()) { return; }
 	if (XWing()) { return; }
+	if (YWing()) { return; }
 	checkIfSolveable();
 }
 
