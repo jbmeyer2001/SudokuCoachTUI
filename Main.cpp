@@ -29,7 +29,6 @@ int main(void)
 	}
 	*/
 
-	//TODO throw and catch an error here
 	SudokuMap sudokus;
 	TUILoop(sudokus);
 	return 0;
@@ -38,16 +37,26 @@ int main(void)
 void TUILoop(SudokuMap sudokus)
 {
 	std::string name;
+	int puzzle[9][9];
 
+get_puzzle:
 	std::cout << "puzzle name:";
 	std::cin >> name;
 
-	//add throw and catch here
-	Sudoku* sudoku = sudokus.findPuzzle(name);
+	//get the puzzle the user specifies from the sudoku map
+	try {
+		sudokus.findPuzzle(name)->getPuzzle(puzzle);
+	}
+	catch (std::runtime_error e) {
+		std::cout << "Runtime Error: " << e.what() << std::endl;
+		std::cout << "these are the puzzle names available:" << std::endl;
+		sudokus.printNames();
+		std::cout << std::endl;
+		goto get_puzzle;
+	}
 
+	//create an instance of AlgorithmicSolver, and check that the puzzle is solveable
 	Step step;
-	int puzzle[9][9];
-	sudoku->getPuzzle(puzzle);
 	AlgorithmicSolver solver(puzzle, step);
 
 	StepID id = solver.check();
@@ -70,6 +79,7 @@ void TUILoop(SudokuMap sudokus)
 
 	std::cin.ignore();
 
+	//solve the puzzle
 	while (step.getStepID() != StepID::SOLVED) {
 		solver.nextStep();
 		solver.printStep();
@@ -78,5 +88,4 @@ void TUILoop(SudokuMap sudokus)
 
 exit:
 	std::cout << "exiting..." << std::endl;
-	//free stuff
 }

@@ -2,8 +2,7 @@
 
 /*
 takes a path to a csv file and generates a sudoku puzzle (9x9 array of ints).
-this function is only used by me to test other parts of the project, and isn't
-meant to be deployed in any way, as such I haven't included error checking.
+Check each csv file while generating the sudoku to ensure it is formatted correctly.
 */
 Sudoku::Sudoku(std::filesystem::path path)
 {
@@ -25,9 +24,24 @@ Sudoku::Sudoku(std::filesystem::path path)
 	for (int i = 0; i < 9; i++) {
 		std::getline(file, line);
 
-		for (int j = 0; j < 9; j++) {
-   			int val = line.at(j * 2) - '0';
-			puzzle[i][j] = val;
+		if (line.length() != 17) {
+			throw std::runtime_error(".csv line length incorrect");
+		}
+		for (int j = 0; j < 17; j++) {
+
+			if (j % 2 == 1) {
+				if (line.at(j) != ',') {
+					throw std::runtime_error("a comma needs to be between every number");
+				}
+				continue;
+			}
+
+			int val = line.at(j) - '0';
+			if (j % 2 == 0 && (val < 0 || val > 9)) {
+				throw std::runtime_error("the entries need to be integers between 0 and 9");
+			}
+   			
+			puzzle[i][j / 2] = val;
 		}
 	}
 

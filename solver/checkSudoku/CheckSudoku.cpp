@@ -43,3 +43,81 @@ void solveRecursive(int puzzle[9][9], int rowNum, int colNum, int& solutions) {
 
 	puzzle[rowNum][colNum] = 0;
 }
+
+bool duplicates(int array[9])
+{
+	//ensure there are no non-zero duplicates in a given array
+	for (int i = 0; i < 8; i++) {
+		for (int j = 8; j > i; j--) {
+			if ((array[i] != 0) && (array[j] != 0) && (array[i] == array[j]))
+				return true;
+		}
+	}
+	return false;
+}
+
+bool isValid(int puzzle[9][9])
+{
+	//return true if the puzzle has no duplicates in its rows/columns/boxes
+	//used by the recursive checker
+	int checkArray[9];
+
+	//Check all rows to see if they have duplicates.
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
+			checkArray[j] = puzzle[i][j];
+		}
+		if (duplicates(checkArray)) {
+			return false;
+		}
+	}
+
+	//Check all columns to see if they have duplicates.
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
+			checkArray[j] = puzzle[j][i];
+		}
+		if (duplicates(checkArray)) {
+			return false;
+		}
+	}
+
+	//Check all boxes to see if they have duplicates.
+	for (int i = 0; i <= 6; i = i + 3) {
+		for (int j = 0; j <= 6; j = j + 3) {
+			for (int k = 0; k < 3; k++) {
+				for (int l = 0; l < 3; l++) {
+					checkArray[(k * 3) + l] = puzzle[k + i][l + j];
+				}
+			}
+			if (duplicates(checkArray)) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
+int nextRow(int row_num, int column_num)
+{
+	//Row should increase only if the current function call is on the last column.
+	if (column_num == 8) {
+		row_num++;
+		return row_num;
+	}
+	return row_num;
+}
+
+int nextColumn(int row_num, int column_num)
+{
+	//If the current function call is on the last column, reset to the first column (of the next row).
+	//Increment the column in every other case to continue traversing a row.
+	if (column_num == 8) {
+		return  0;
+	}
+	else {
+		column_num++;
+		return column_num;
+	}
+}

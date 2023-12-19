@@ -12,6 +12,8 @@ void BoardMap::init(int puzzle[9][9])
 	std::set<int> cols[9];
 	std::set<int> boxes[9];
 
+	//generate a set for every row/column/box that contains all the numbers in that row/column/box
+	//if no number exists in a given space, add it to a set of the unfilled spaces.
 	for (int i = 0; i < 81; i++) {
 		int row = i / 9;
 		int col = i % 9;
@@ -28,6 +30,11 @@ void BoardMap::init(int puzzle[9][9])
 		}
 	}
 
+	//populate the spaceCandidates array of sets.
+	//It contains an entry for every space of the puzzle.
+	//Go through all unfilled spaces, and add the candidates
+	//that do not exist within that spaces row/column/box
+	//to that spaceCandidates entry.
 	std::set<int>::iterator it1;
 	for (it1 = unfilled.begin(); it1 != unfilled.end(); it1++) {
 		int spaceNum = *it1;
@@ -58,11 +65,14 @@ void BoardMap::insert(int spaceNum, int val)
 	int col = spaceNum % 9;
 	int box = (spaceNum / 27) * 3 + (spaceNum % 9) / 3;
 
+	//remove the entry from the unfilled spaces
 	unfilled.erase(spaceNum);
+
+	//clear the entry in space candidates
 	spaceCandidates[spaceNum].clear();
 
+	//remove this value from all spaces that this spaces shares a row/column/box with
 	std::set<int> affectedSpaces = getUnion(getRow(row), getCol(col), getBox(box));
-
 	std::set<int>::iterator it;
 	for (it = affectedSpaces.begin(); it != affectedSpaces.end(); it++) {
 		if (unfilled.find(*it) != unfilled.end()) {
@@ -73,6 +83,7 @@ void BoardMap::insert(int spaceNum, int val)
 
 std::set<int> BoardMap::getCandidates(std::set<int> spaces)
 {
+	//return the union of all the candidates of a given set of spaces
 	std::set<int> retval;
 	std::set<int>::iterator it;
 
@@ -89,6 +100,7 @@ std::set<int> BoardMap::getCandidates(std::set<int> spaces)
 
 std::set<int> BoardMap::getCandidates(int space)
 {
+	//return all of the candidates of a given space
 	std::set<int> retval;
 	
 	if (unfilled.contains(space)) {
@@ -164,7 +176,7 @@ std::set<int> BoardMap::getUnfilledSpaces(std::set<int> spaces)
 std::set<int> BoardMap::getCommonalities(int i1, int i2, int i3)
 {
 	std::set<int> commonalities;
-	std::set<int> si1 = spaceCandidates[i1]; //TODO maybe come up with better variable names than si1, si2, si3
+	std::set<int> si1 = spaceCandidates[i1];
 	std::set<int> si2 = spaceCandidates[i2];
 	std::set<int> si3 = spaceCandidates[i3];
 

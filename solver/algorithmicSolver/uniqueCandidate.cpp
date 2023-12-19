@@ -5,6 +5,10 @@ bool AlgorithmicSolver::uniqueCandidate(void)
 	bool flag = false;
 
 	std::set<int>::iterator it;
+
+	//check every unfilled space to see if it is the only space within its row, column,
+	//or box to contain a given candidate. If it is then we can place that candidate in
+	//that space.
 	for (it = boardMap.unfilled.begin(); it != boardMap.unfilled.end(); it++) {
 		int space = *it;
 		int row = space / 9;
@@ -17,9 +21,13 @@ bool AlgorithmicSolver::uniqueCandidate(void)
 		std::set<int> boxSpaces = getBox(box);
 		boxSpaces.erase(space);
 
-		//if one call returns true, the rest won't execute
+		//check the given space within its box
 		flag |= checkSpaceUniqueCandidate(space, boxSpaces, Set::BOX);
+
+		//check the given space within its row
 		flag |= checkSpaceUniqueCandidate(space, rowSpaces, Set::ROW);
+
+		//check the given space within its column
 		flag |= checkSpaceUniqueCandidate(space, colSpaces, Set::COL);
 
 		if (flag) {

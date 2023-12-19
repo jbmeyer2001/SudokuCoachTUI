@@ -19,6 +19,8 @@ AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9], Step& step)
 
 void AlgorithmicSolver::nextStep(void)
 {
+	//go through all possible steps starting from (relatively) the easier 
+	//ones to see, and search for harder patterns as we go on.
 	step.clearStep();
 	if (solved()) { return; }
 	if (soleCandidate()) { return; }
@@ -40,6 +42,7 @@ bool AlgorithmicSolver::solved(void)
 
 	return false;
 }
+
 StepID AlgorithmicSolver::check(void)
 {
 	//attempt to solve the puzzle, stop when it's either solved or we realize we can't solve it
@@ -61,6 +64,7 @@ StepID AlgorithmicSolver::check(void)
 
 void AlgorithmicSolver::checkIfSolveable(void)
 {
+	//checkSudoku returns true if there is a single valid solution to the puzzle given
 	if (checkSudoku(this->puzzle)) {
 		this->step.cantSolve();
 	} 

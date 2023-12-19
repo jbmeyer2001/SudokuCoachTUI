@@ -5,6 +5,7 @@ bool AlgorithmicSolver::nakedSubset(void)
 	Set set;
 	std::set<int> spaces;
 
+	//iterate through all subsets (all 9 rows/columns/boxes)
 	for (int i = 0; i < 27; i++) {
 		switch (i % 3) {
 		case 0:
@@ -21,17 +22,21 @@ bool AlgorithmicSolver::nakedSubset(void)
 			break;
 		}
 
-		if (spaces.size() < 4) {//TODO: explain this
+		//a naked subset cannot occur within a subset less than 4 spaces
+		//if it did, the interaction would already have been covered by unique candidate
+		if (spaces.size() < 4) {
 			continue;
 		}
 
 		std::set<int>::iterator it1;
 
+		//iterate through all spaces in the given subset
 		for (it1 = spaces.begin(); it1 != spaces.end(); it1++) {
 			std::set<int> candidates1 = boardMap.spaceCandidates[*it1];
 			std::set<int> equivSpaces;
 			equivSpaces.insert(*it1);
 
+			//iterate through all remaining spaces to see how many other spaces have exactly the same candidates
 			std::set<int>::iterator it2 = it1;
 			std::advance(it2, 1);
 			for (it2; it2 != spaces.end(); it2++) {
@@ -43,7 +48,10 @@ bool AlgorithmicSolver::nakedSubset(void)
 				}
 			}
 
-			if (equivSpaces.size() == candidates1.size()) {//TODO think about moving this to teh above for loop {
+			//if the number of spaces that have the exact same candidates is equivalent
+			//to the number of candidates, that is a naked subset and those candidates may
+			//be removed from the other spaces within the given row/column/box
+			if (equivSpaces.size() == candidates1.size()) {
 				std::set<int> affectedSpaces = getDifference(spaces, equivSpaces);
 				if (boardMap.removeCandidates(candidates1, affectedSpaces)) {
 					step.updateNakedSubset(i / 9, set, candidates1, equivSpaces, affectedSpaces);

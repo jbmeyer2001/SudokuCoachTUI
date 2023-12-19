@@ -13,6 +13,7 @@ private:
 public:
 	SudokuMap(void);
 	Sudoku* findPuzzle(std::string puzzleName);
+	void printNames(void);
 	~SudokuMap(void);
 };
 

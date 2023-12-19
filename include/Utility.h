@@ -26,6 +26,7 @@ enum class StepID
 	XWING = 9,
 };
 
+//used to specify output color of console text
 enum class Color
 {
 	GREEN = 10,
@@ -43,12 +44,7 @@ constexpr Color MAGENTA = Color::MAGENTA;
 constexpr Color YELLOW	= Color::YELLOW;
 constexpr Color WHITE	= Color::WHITE;
 
-void printPuzzle(int puzzle[9][9]);
 bool isSolved(int puzzle[9][9]);
-bool duplicates(int array[9]);
-bool isValid(int puzzle[9][9]);
-int nextRow(int row_num, int column_num);
-int nextColumn(int row_num, int column_num);
 void copyPuzzle(int src[9][9], int dest[9][9]);
 std::set<int> getRow(int row);
 std::set<int> getCol(int col);
