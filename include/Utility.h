@@ -41,6 +41,7 @@ enum class Color
 	GREEN = 10,
 	BLUE = 11,
 	RED = 12,
+	MAGENTA = 13,
 	YELLOW = 14,
 	WHITE = 15,
 };
@@ -48,6 +49,7 @@ enum class Color
 constexpr Color GREEN	= Color::GREEN;
 constexpr Color BLUE	= Color::BLUE;
 constexpr Color RED		= Color::RED;
+constexpr Color MAGENTA = Color::MAGENTA;
 constexpr Color YELLOW	= Color::YELLOW;
 constexpr Color WHITE	= Color::WHITE;
 

@@ -45,26 +45,16 @@ struct BlockRowCol {
 };
 
 /*
-val				- the value to be removed as candidates from affected spaces
-box1			- the box containing candidates that must be removed
-box2			- the first box causing the interaction
-box2			- the second box causing the interaction
-rowCol			- whether the interacton occured in a row or a column
-boxSubset1		- where (top/mid/bot/left/right) in the box the first part of the interaction occured
-boxSubset2		- where (top/mid/bot/left/right) in the box the second part of the interaction occured
-boxSubset3		- where (top/mid/bot/left/right) in the box the third part of the interaction occured
-affectedSpaces	- the spaces to have their candidates removed
+TODO:
 */
 struct BlockBlock {
 	int val = -1;
-	int box1 = -1;
-	int box2 = -1;
-	int box3 = -1;
-	std::string rowCol = "";
-	std::string boxSubset1 = "";
-	std::string boxSubset2 = "";
-	std::string boxSubset3 = "";
-	std::set<int> affectedSpaces;
+	int affectedBox = -1;
+	int affectingSubset1 = -1;
+	int affectingSubset2 = -1;
+	int affectingBox1 = -1;
+	int affectingBox2 = -1;
+	Set rowCol = Set::NA;
 };
 
 /*
@@ -112,7 +102,7 @@ struct XWing {
 	int row2 = -1;
 	int col1 = -1;
 	int col2 = -1;
-	std::string rowCol = "";
+	Set rowCol = Set::NA;
 	std::set<int> affectedSpaces;
 };
 
@@ -131,7 +121,7 @@ private:
 	void updateSoleCandidate(int row, int col, int val);
 	void updateUniqueCandidate(int row, int col, int val, Set set);
 	void updateBlockRowCol(int val, int boxNum, int rowColNum, Set rowCol, BoxSubset boxSubset, std::set<int> affectedSpaces);
-	void updateBlockBlock(int val, int box1, int box2, int box3, Set rowCol, BoxSubset boxSubset1, BoxSubset boxSubset2, BoxSubset boxSubset3, std::set<int> affectedSpaces);
+	void updateBlockBlock(int val, int affectedBox, int subset1, int subset2, int box1, int box2, Set rowCol);
 	void updateNakedSubset(int rowColBoxNum, Set rowColBox, std::set<int> vals, std::set<int> affectingSpaces, std::set<int> affectedSpaces);
 	void updateHiddenSubset(int rowColBoxNum, Set rowColBox, std::set<int> removalVals, std::set<int> susbsetVals, std::set<int> affectedSpaces);
 	void updateXWing(int val, int row1, int row2, int col1, int col2, Set rowCol, std::set<int> affectedSpaces);

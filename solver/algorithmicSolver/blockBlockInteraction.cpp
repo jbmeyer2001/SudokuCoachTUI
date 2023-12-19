@@ -52,10 +52,14 @@ bool AlgorithmicSolver::blockBlockInteraction(void)
 		int row = startIndex / 9;
 		int col = startIndex % 9;
 
-		block rowBox1 = blocks[(box - (box % 3)) + ((box + 1) % 3)];
-		block rowBox2 = blocks[(box - (box % 3)) + ((box + 2) % 3)];
-		block colBox1 = blocks[(box + 3) % 9];
-		block colBox2 = blocks[(box + 6) % 9];
+		int numRowBox1 = (box - (box % 3)) + ((box + 1) % 3);
+		int numRowBox2 = (box - (box % 3)) + ((box + 2) % 3);
+		int numColBox1 = (box + 3) % 9;
+		int numColBox2 = (box + 6) % 9;
+		block rowBox1 = blocks[numRowBox1];
+		block rowBox2 = blocks[numRowBox2];
+		block colBox1 = blocks[numColBox1];
+		block colBox2 = blocks[numColBox2];
 
 		std::set<int> rowOneAndTwoRemove = getIntersection(rowBox1.rowOneAndTwoComm, rowBox2.rowOneAndTwoComm);
 		std::set<int> rowOneAndThreeRemove = getIntersection(rowBox1.rowOneAndThreeComm, rowBox2.rowOneAndThreeComm);
@@ -70,42 +74,42 @@ bool AlgorithmicSolver::blockBlockInteraction(void)
 
 		if (boardMap.removeCandidates(rowOneAndTwoRemove, affectedSpaces, val))
 		{
-			step->updateBlockBlock(val, row, row + 1, row + 2, Set::ROW, BoxSubset::TOP, BoxSubset::MIDDLE, BoxSubset::BOTTOM, affectedSpaces);
+			step->updateBlockBlock(val, box, row, row + 1, numRowBox1, numRowBox2, Set::ROW);
 			return true;
 		}
 
 		affectedSpaces = getDifference(getBox(box), getRow(row + 1));
 		if (boardMap.removeCandidates(rowOneAndThreeRemove, affectedSpaces, val))
 		{
-			step->updateBlockBlock(val, row, row + 2, row + 1, Set::ROW, BoxSubset::TOP, BoxSubset::BOTTOM, BoxSubset::MIDDLE, affectedSpaces);
+			step->updateBlockBlock(val, box, row, row + 2, numRowBox1, numRowBox2, Set::ROW);
 			return true;
 		}
 
 		affectedSpaces = getDifference(getBox(box), getRow(row));
 		if (boardMap.removeCandidates(rowTwoAndThreeRemove, affectedSpaces, val))
 		{
-			step->updateBlockBlock(val, row + 1, row + 2, row, Set::ROW, BoxSubset::MIDDLE, BoxSubset::BOTTOM, BoxSubset::TOP, affectedSpaces);
+			step->updateBlockBlock(val, box, row + 1, row + 2, numRowBox1, numRowBox2, Set::ROW);
 			return true;
 		}
 
 		affectedSpaces = getDifference(getBox(box), getCol(col + 2));
 		if (boardMap.removeCandidates(colOneAndTwoRemove, affectedSpaces, val))
 		{
-			step->updateBlockBlock(val, col, col + 1, col + 2, Set::COL, BoxSubset::LEFT, BoxSubset::MIDDLE, BoxSubset::RIGHT, affectedSpaces);
+			step->updateBlockBlock(val, box, col, col + 1, numColBox1, numColBox2, Set::COL);
 			return true;
 		}
 
 		affectedSpaces = getDifference(getBox(box), getCol(col + 1));
 		if (boardMap.removeCandidates(colOneAndThreeRemove, affectedSpaces, val))
 		{
-			step->updateBlockBlock(val, col, col + 2, col + 1, Set::COL, BoxSubset::LEFT, BoxSubset::RIGHT, BoxSubset::MIDDLE, affectedSpaces);
+			step->updateBlockBlock(val, box, col, col + 2, numColBox1, numColBox2, Set::COL);
 			return true;
 		}
 
 		affectedSpaces = getDifference(getBox(box), getCol(col));
 		if (boardMap.removeCandidates(colTwoAndThreeRemove, affectedSpaces, val))
 		{
-			step->updateBlockBlock(val, col + 1, col + 2, col, Set::COL, BoxSubset::MIDDLE, BoxSubset::RIGHT, BoxSubset::LEFT, affectedSpaces);
+			step->updateBlockBlock(val, box, col + 1, col + 2, numColBox1, numColBox2, Set::COL);
 			return true;
 		}
 	}
