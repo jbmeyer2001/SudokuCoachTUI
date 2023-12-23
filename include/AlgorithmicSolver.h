@@ -21,8 +21,6 @@ private:
 	BoardMap boardMap;
 	Step step;
 
-	bool solved(void);
-
 	//check to see if we can identify a sole candidate
 	bool soleCandidate(void);
 
@@ -49,13 +47,13 @@ private:
 
 	//check to see if we can identify a xywing
 	bool YWing(void);
-	bool YWingHelper(int cur, int space1, int space2);
 
 	void checkIfSolveable(void);
 
 public:
-	AlgorithmicSolver(int puzzle[9][9], Step& step);
+	AlgorithmicSolver(int puzzle[9][9]);
 
+	bool solved(void);
 	void nextStep(void);
 	StepID check(void);
 	void printStep(void);

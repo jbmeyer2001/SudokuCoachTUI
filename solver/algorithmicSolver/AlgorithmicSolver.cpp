@@ -4,7 +4,7 @@
 #include "AlgorithmicSolver.h"
 #include "CheckSudoku.h"
 
-AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9], Step& step)
+AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9])
 {
 	for (int i = 0; i < 9; i++) {
 		for (int j = 0; j < 9; j++) {
@@ -14,7 +14,6 @@ AlgorithmicSolver::AlgorithmicSolver(int puzzle[9][9], Step& step)
 	}
 	
 	boardMap.init(puzzle);
-	this->step = step;
 }
 
 void AlgorithmicSolver::nextStep(void)
