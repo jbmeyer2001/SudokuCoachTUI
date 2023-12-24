@@ -54,7 +54,7 @@ bool AlgorithmicSolver::nakedSubset(void)
 			if (equivSpaces.size() == candidates1.size()) {
 				std::set<int> affectedSpaces = getDifference(spaces, equivSpaces);
 				if (boardMap.removeCandidates(candidates1, affectedSpaces)) {
-					step.updateNakedSubset(i / 9, set, candidates1, equivSpaces, affectedSpaces);
+					step.updateNakedSubset(i / 3, set, candidates1, equivSpaces, affectedSpaces);
 					return true;
 				}
 			}

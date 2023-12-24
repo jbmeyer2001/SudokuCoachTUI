@@ -81,7 +81,6 @@ affectedSpaces	- the spaces who had their candidates removed as a result of the 
 struct HiddenSubset {
 	int rowColBoxNum = -1;
 	Set rowColBox = Set::NA;
-	std::set<int> removalVals;
 	std::set<int> subsetVals;
 	std::set<int> affectedSpaces;
 };
@@ -141,7 +140,7 @@ public:
 	void updateBlockRowCol(int val, int boxNum, int rowColNum, Set rowCol);
 	void updateBlockBlock(int val, int affectedBox, int subset1, int subset2, int box1, int box2, Set rowCol);
 	void updateNakedSubset(int rowColBoxNum, Set rowColBox, std::set<int> vals, std::set<int> affectingSpaces, std::set<int> affectedSpaces);
-	void updateHiddenSubset(int rowColBoxNum, Set rowColBox, std::set<int> removalVals, std::set<int> susbsetVals, std::set<int> affectedSpaces);
+	void updateHiddenSubset(int rowColBoxNum, Set rowColBox, std::set<int> susbsetVals, std::set<int> affectedSpaces);
 	void updateXWing(int val, int row1, int row2, int col1, int col2, Set rowCol, std::set<int> affectedSpaces);
 	void updateYWing(int candidate, int base, int wing1, int wing2, std::set<int> affectedSpaces);
 	void solved(void) { this->name = StepID::SOLVED; }

@@ -56,12 +56,11 @@ void Step::updateNakedSubset(int rowColBoxNum, Set rowColBox, std::set<int> vals
 	this->nakedSubset.affectedSpaces = affectedSpaces;
 }
 
-void Step::updateHiddenSubset(int rowColBoxNum, Set rowColBox, std::set<int> removalVals, std::set<int> subsetVals, std::set<int> affectedSpaces)
+void Step::updateHiddenSubset(int rowColBoxNum, Set rowColBox, std::set<int> subsetVals, std::set<int> affectedSpaces)
 {
 	this->name = StepID::HIDDENSUBSET;
 	this->hiddenSubset.rowColBoxNum = rowColBoxNum;
 	this->hiddenSubset.rowColBox = rowColBox;
-	this->hiddenSubset.removalVals = removalVals;
 	this->hiddenSubset.subsetVals = subsetVals;
 	this->hiddenSubset.affectedSpaces = affectedSpaces;
 }
@@ -98,7 +97,6 @@ void Step::printSoleCandidate(int puzzle[9][9])
 {
 	SoleCandidate cur = this->soleCandidate;
 
-	setColor(WHITE);
 	printf("STEP:sole candidate\nthe value %d was placed in row %d column %d using the 'sole candidate' pattern.\n",
 		cur.val,
 		cur.row + 1,
@@ -120,7 +118,7 @@ void Step::printSoleCandidate(int puzzle[9][9])
 		}
 		std::cout << std::endl;
 	}
-
+	setColor(WHITE);
 }
 
 void Step::printUniqueCandidate(int puzzle[9][9]) 
@@ -146,7 +144,6 @@ void Step::printUniqueCandidate(int puzzle[9][9])
 		std::cout << "**ERROR: we should NOT be here**" << std::endl;
 	}
 
-	setColor(WHITE);
 	printf("STEP:unique candidate\nthe value %d was placed in row %d column %d using the 'unique candidate' pattern.\nThe space at row %d column %d was the only space within %s %d with %d as a candidate.\n",
 		cur.val,
 		cur.row + 1,
@@ -173,6 +170,7 @@ void Step::printUniqueCandidate(int puzzle[9][9])
 		}
 		std::cout << std::endl;
 	}
+	setColor(WHITE);
 }
 
 void Step::printBlockRowCol(int puzzle[9][9]) 
@@ -185,7 +183,6 @@ void Step::printBlockRowCol(int puzzle[9][9])
 	//the subset of all the spaces in the box num specified by cur.boxNum
 	std::set<int> boxSubset = getIntersection(getBox(cur.boxNum), removeSubset);
 
-	setColor(WHITE);
 	printf("STEP:block to column or row interaction\nthe value %d was removed as a candidate from all the spaces in %s %d except in box %d.\nThis is because there was a block to column/row interaction.\nThe only places a %d could go within box %d was in %s %d, so we could remove it as a candidate from the rest of %s %d.\n",
 		cur.val,
 		setToString(cur.rowCol).c_str(),
@@ -214,6 +211,7 @@ void Step::printBlockRowCol(int puzzle[9][9])
 		}
 		std::cout << std::endl;
 	}
+	setColor(WHITE);
 }
 
 void Step::printBlockBlock(int puzzle[9][9]) 
@@ -238,7 +236,6 @@ void Step::printBlockBlock(int puzzle[9][9])
 	std::set<int> affectingSpaces = getIntersection(affectingBoxSpaces, subsetSpaces);
 	std::set<int> affectedSpaces = getIntersection(affectedBoxSpaces, subsetSpaces);
 
-	setColor(WHITE);
 	printf("STEP:block to block interaction\nThe value %d was able to be removed as a candidate from %s %d and %d within box %d. This is because, within box %d and box %d, the only places that %d could go were in %s %d and %d\n",
 		cur.val,
 		setToString(cur.rowCol).c_str(),
@@ -268,6 +265,7 @@ void Step::printBlockBlock(int puzzle[9][9])
 		}
 		std::cout << std::endl;
 	}
+	setColor(WHITE);
 }
 
 void Step::printNakedSubset(int puzzle[9][9]) 
@@ -295,9 +293,9 @@ void Step::printNakedSubset(int puzzle[9][9])
 		int col = *it % 9;
 
 		affectingSpaces += "(";
-		affectingSpaces += (char)(row + 48);
+		affectingSpaces += (char)(row + 49); //adding 1 for display (so there is no row/col/box 0, then 48 for ascii)
 		affectingSpaces += ", ";
-		affectingSpaces += (char)(col + 48);
+		affectingSpaces += (char)(col + 49); //adding 1 for display (so there is no row/col/box 0, then 48 for ascii)
 		affectingSpaces += ")";
 		affectingSpaces += ", ";
 		//adds '(row, col), ' on the end of the string
@@ -312,9 +310,9 @@ void Step::printNakedSubset(int puzzle[9][9])
 		int col = *it % 9;
 
 		affectedSpaces += "(";
-		affectedSpaces += (char)(row + 48);
+		affectedSpaces += (char)(row + 49); //adding 1 for display (so there is no row/col/box 0, then 48 for ascii)
 		affectedSpaces += ", ";
-		affectedSpaces += (char)(col + 48);
+		affectedSpaces += (char)(col + 49); //adding 1 for display (so there is no row/col/box 0, then 48 for ascii)
 		affectedSpaces += ")";
 		affectedSpaces += ", ";
 		//addes '(row, col), ' on the end of the string
@@ -322,7 +320,6 @@ void Step::printNakedSubset(int puzzle[9][9])
 	affectedSpaces = affectedSpaces.substr(0, affectedSpaces.size() - 2);
 	affectedSpaces += "]";
 
-	setColor(WHITE);
 	printf("STEP:naked subset\nthe candidates %s were able to be removed from %s,\nbecause within %s %d, exactly %d possible candidates existed within exactly %d spaces.\nThat combination forms a subset of candidates that can only exist within those spaces.\nthe spaces contining those candidates %s are %s,\nwhich means the remaining spaces in %s %d: %s cannot contain those values.\n",
 		vals.c_str(),
 		affectedSpaces.c_str(),
@@ -352,26 +349,16 @@ void Step::printNakedSubset(int puzzle[9][9])
 		}
 		std::cout << std::endl;
 	}
+	setColor(WHITE);
 }
 
 void Step::printHiddenSubset(int puzzle[9][9]) 
 {
 	HiddenSubset cur = this->hiddenSubset;
-	std::string removalVals;
 	std::string subsetVals;
 	std::string affectedSpaces;
 
 	std::set<int>::iterator it;
-	//add vals to a string (to be printed later)
-	removalVals += "[";
-	for (it = cur.removalVals.begin(); it != cur.removalVals.end(); it++) {
-		removalVals += (char)(*it + 48);
-		removalVals += ", ";
-		//adds 'val, ' on the end of the string
-	}
-	removalVals = removalVals.substr(0, removalVals.size() - 2);//remove the extra ', '
-	removalVals += "]";
-
 	//add vals to a string (to be printed later)
 	subsetVals += "[";
 	for (it = cur.subsetVals.begin(); it != cur.subsetVals.end(); it++) {
@@ -389,9 +376,9 @@ void Step::printHiddenSubset(int puzzle[9][9])
 		int col = *it % 9;
 
 		affectedSpaces += "(";
-		affectedSpaces += (char)(row + 48);
+		affectedSpaces += (char)(row + 49); //adding 1 for display (so there is no row/col/box 0, then 48 for ascii)
 		affectedSpaces += ", ";
-		affectedSpaces += (char)(col + 48);
+		affectedSpaces += (char)(col + 49); //adding 1 for display (so there is no row/col/box 0, then 48 for ascii)
 		affectedSpaces += ")";
 		affectedSpaces += ", ";
 		//adds '(row, col), ' on the end of the string
@@ -399,9 +386,8 @@ void Step::printHiddenSubset(int puzzle[9][9])
 	affectedSpaces = affectedSpaces.substr(0, affectedSpaces.size() - 2);
 	affectedSpaces += "]";
 
-	setColor(WHITE);
-	printf("STEP:hidden subset\nThe candidates %s were able to be removed from %s because a 'hidden subset' was formed within %s %d containing the candidates %s.\nThere were %d candidates:%s which occured in %d spaces:%s (all in %s %d) which means those spaces can only contain those candidates.\nThis means that all other candidates:%s may be removed from those spaces:%s\n",
-		removalVals.c_str(),
+	printf("STEP:hidden subset\nAll the candidates except %s were able to be removed from the spaces %s \nbecause a 'hidden subset' was formed within %s %d containing the candidates %s.\nThis is because there were exactly %d candidates:%s which occured in only %d spaces:%s in %s %d. \nTherefore, those spaces may only be one of those candidates.\n",
+		subsetVals.c_str(),
 		affectedSpaces.c_str(),
 		setToString(cur.rowColBox).c_str(),
 		cur.rowColBoxNum + 1,
@@ -411,9 +397,7 @@ void Step::printHiddenSubset(int puzzle[9][9])
 		cur.affectedSpaces.size(),
 		affectedSpaces.c_str(),
 		setToString(cur.rowColBox).c_str(),
-		cur.rowColBoxNum + 1,
-		removalVals.c_str(),
-		affectedSpaces.c_str());
+		cur.rowColBoxNum + 1);
 
 	for (int i = 0; i < 9; i++) {
 		for (int j = 0; j < 9; j++) {
@@ -428,6 +412,7 @@ void Step::printHiddenSubset(int puzzle[9][9])
 		}
 		std::cout << std::endl;
 	}
+	setColor(WHITE);
 }
 
 void Step::printXWing(int puzzle[9][9]) 
@@ -452,7 +437,6 @@ void Step::printXWing(int puzzle[9][9])
 	std::set<int> affectingSpaces = (cur.rowCol == Set::ROW) ? colSpaces : rowSpaces;
 	std::set<int> intersections = getIntersection(rowSpaces, colSpaces);
 
-	setColor(WHITE);
 	printf("STEP:x-wing\nconsider the rows %d and %d, and the columns %d and %d.\nWithin those %ss the only spaces that contain the candidate %d are also within those %ss.\nTherefore, the occurences of %d in the final solution must be at\nthe intersection of the rows: %d, %d and the columns:%d, %d.\nbecause of this, we may remove %d as a candidate from all spaces in the %ss %d and %d that aren't at those intersections.\n",
 		cur.row1 + 1,
 		cur.row2 + 1,
@@ -490,6 +474,7 @@ void Step::printXWing(int puzzle[9][9])
 		}
 		std::cout << std::endl;
 	}
+	setColor(WHITE);
 }
 
 void Step::printYWing(int puzzle[9][9]) 
@@ -503,7 +488,6 @@ void Step::printYWing(int puzzle[9][9])
 	int wing2Row = cur.wing2 / 9;
 	int wing2Col = cur.wing2 % 9;
 
-	setColor(WHITE);
 	printf("STEP:y-wing\nThe space at (row %d, column %d) is the base of a y-wing where the wings are (row %d, column %d) and (row %d, column %d).\nBecause of it, we were able to remove %d as a candidate from the intersection of the row/column/boxes that each wing is a part of.\n",
 		baseRow + 1,
 		baseCol + 1,
@@ -530,6 +514,7 @@ void Step::printYWing(int puzzle[9][9])
 		}
 		std::cout << std::endl;
 	}
+	setColor(WHITE);
 }
 
 void Step::printStep(int puzzle[9][9])

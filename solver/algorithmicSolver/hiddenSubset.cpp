@@ -45,7 +45,7 @@ bool AlgorithmicSolver::hiddenSubset(void)
 			if (getDifference(partitionCandidates, otherCandidates).size() == partition.size()) {
 				int unused = 0;
 				if (boardMap.removeCandidates(otherCandidates, partition)) {
-					step.updateHiddenSubset(i / 9, set, otherCandidates, partitionCandidates, partition);
+					step.updateHiddenSubset(i / 3, set, getDifference(partitionCandidates, otherCandidates), partition);
 					return true;
 				}
 			}
