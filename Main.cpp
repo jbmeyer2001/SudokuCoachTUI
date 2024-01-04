@@ -51,6 +51,10 @@ get_puzzle:
 		std::cout << "this puzzle is not solveable." << std::endl;
 		goto exit;
 		break;
+	case StepID::NA:
+		std::cout << "this puzzle is invalid. There must have been errors in its entry." << std::endl;
+		goto exit;
+		break;
 	default:
 		std::cout << "there's been an internal error." << std::endl;
 		goto exit;

@@ -38,6 +38,7 @@ bool AlgorithmicSolver::solved(void)
 	if (isSolved(puzzle)) {
 		step.solved();
 		return true;
+
 	}
 
 	return false;
@@ -45,8 +46,13 @@ bool AlgorithmicSolver::solved(void)
 
 StepID AlgorithmicSolver::check(void)
 {
+	//ensure puzzle valid
+	if (!isValid(puzzle)) {
+		return StepID::NA;
+	}
+
 	//attempt to solve the puzzle, stop when it's either solved or we realize we can't solve it
-	StepID cur = step.getStepID();
+	StepID cur = StepID::NA;
 	while (cur != StepID::SOLVED && cur != StepID::CANTSOLVE && cur != StepID::UNSOLVEABLE) {
 		nextStep();
 		cur = step.getStepID();
