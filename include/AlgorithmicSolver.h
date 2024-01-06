@@ -34,11 +34,8 @@ private:
 	//check to see if we can identify a block-bock
 	bool blockBlockInteraction(void);
 
-	//check to see if we can identify a naked subset
-	bool nakedSubset(void);
-
-	//check to see if we can identify a hidden subset
-	bool hiddenSubset(void);
+	//check to see if we can identify a naked or hidden subset
+	bool subsets(void);
 	std::set<int> getNextPartition(std::vector<int> spaces, unsigned short& prev);
 
 	//check to see if we can identify an xwing

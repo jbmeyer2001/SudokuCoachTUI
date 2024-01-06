@@ -26,8 +26,7 @@ void AlgorithmicSolver::nextStep(void)
 	if (uniqueCandidate()) { return; }
 	if (blockRowColInteraction()) { return; }
 	if (blockBlockInteraction()) { return; }
-	if (nakedSubset()) { return; }
-	if (hiddenSubset()) { return; }
+	if (subsets()) { return; }
 	if (XWing()) { return; }
 	if (YWing()) { return; }
 	checkIfSolveable();

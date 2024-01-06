@@ -1,11 +1,9 @@
 #include "AlgorithmicSolver.h"
 
-bool AlgorithmicSolver::hiddenSubset(void)
-{
+bool AlgorithmicSolver::subsets(void) {
 	Set set;
 	std::set<int> spaces;
 
-	//iterate through all subsets (all 9 rows/columns/boxes)
 	for (int i = 0; i < 27; i++) {
 		switch (i % 3) {
 		case 0:
@@ -22,26 +20,37 @@ bool AlgorithmicSolver::hiddenSubset(void)
 			break;
 		}
 
-		//a hidden subset cannot occur within a subset less than 4 spaces
-		//if it did, the interaction would already have been covered by unique candidate.
+		//neither naked nor hidden subset can occur within a subset less than 4 spaces
+		//if it did, the interaction would already have been covered by unique candidate
 		if (spaces.size() < 4) {
 			continue;
 		}
 
 		unsigned short prev = (unsigned short)2;
 		std::vector<int> spacesVec(spaces.begin(), spaces.end());
-
-		//use a bit mask (getNextPartition) to partition the set into a subset
 		std::set<int> partition = getNextPartition(spacesVec, prev);
 		while (!partition.empty()) {
-			//get the other spaces (not in the partition)
 			std::set<int> other = getDifference(spaces, partition);
-
 			std::set<int> partitionCandidates = boardMap.getCandidates(partition);
 			std::set<int> otherCandidates = boardMap.getCandidates(other);
 
-			//if the partition contains a number of candidates equal to the size of the partition that
-			//DO NOT occur in all of the other spaces then we've found a hidden candidate
+			/*
+			* Naked Subset
+			* if the number of candidates in a given paritition (of a row/column/box) is equal to the size of that subset, 
+			* those candidates cannot exist in the candidates not within that partition.
+			*/
+			if (partitionCandidates.size() == partition.size()) {
+				if (boardMap.removeCandidates(partitionCandidates, other)) {
+					step.updateNakedSubset(i / 3, set, partitionCandidates, partition, other);
+					return true;
+				}
+			}
+
+			/*
+			* Hidden Subset
+			* If a number of candidates equal to the size of a partition ONLY exist within that partition, then 
+			* those partition spaces cannot be any other candidate.
+			*/
 			if (getDifference(partitionCandidates, otherCandidates).size() == partition.size()) {
 				int unused = 0;
 				if (boardMap.removeCandidates(otherCandidates, partition)) {

@@ -1,6 +1,6 @@
 #include "AlgorithmicSolver.h"
 
-bool AlgorithmicSolver::YWing(void) {\
+bool AlgorithmicSolver::YWing(void) {
 
 	//generate a set of all the spaces with only two candidates
 	std::set<int> twoCandSpaces;
@@ -92,4 +92,5 @@ bool AlgorithmicSolver::YWing(void) {\
 			}
 		}
 	}
+	return false;
 }
