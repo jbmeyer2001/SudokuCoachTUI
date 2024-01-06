@@ -10,7 +10,7 @@ bool AlgorithmicSolver::YWing(void) {\
 		}
 	}
 
-	//iterate through those to find if they are the 'base' of the xwwing
+	//iterate through those to find if they are the 'base' of the ywing
 	std::set<int>::iterator it;
 	for (it = twoCandSpaces.begin(); it != twoCandSpaces.end(); it++) {
 		int cur = *it;

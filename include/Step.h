@@ -114,7 +114,7 @@ struct YWing {
 
 class Step {
 private:
-	StepID name;
+	StepID name = StepID::NA;
 	struct SoleCandidate soleCandidate;
 	struct UniqueCandidate uniqueCandidate;
 	struct BlockRowCol blockRowCol;
