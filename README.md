@@ -40,7 +40,7 @@ to get the next step.
 <h4>Block to Block</h4>
 
 ![](images/BlockBlockExample.JPG)
-<h4>Naked Subset/h4>
+<h4>Naked Subset</h4>
   
 ![](images/NakedSubsetExample.JPG)
 <h4>Hidden Subset</h4>
