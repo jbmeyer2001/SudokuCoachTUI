@@ -29,18 +29,26 @@ to get the next step.
 
 <h2>Samples</h2>
 <h4>Sole Candidate</h4>
+
 ![](images/SoleCandidateExample.JPG)
 <h4>Unique Candidate</h4>
+
 ![](images/UniqueCandidateExample.JPG)
 <h4>Block to Row/Col</h4>
+
 ![](images/BlockRowColExample.JPG)
 <h4>Block to Block</h4>
+
 ![](images/BlockBlockExample.JPG)
 <h4>Naked Subset/h4>
+  
 ![](images/NakedSubsetExample.JPG)
 <h4>Hidden Subset</h4>
+
 ![](images/HiddenSubsetExample.JPG)
 <h4>X-Wing</h4>
+
 ![](images/XWingExample.JPG)
 <h4>YWing</h4>
+
 ![](images/YWingExample.JPG)
